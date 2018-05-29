@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>办理储蓄业务</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/css/adminlte.min.css">
+    <link rel="stylesheet" href="/css/daterangepicker-bs3.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <style>
+        label
+        {
+            margin-top:5px;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-bookmark"></i>
+                                <p>储蓄</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-hand-paper-o "></i>
+                                <p>贷款 <i class="right fa fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fa fa-circle-o "></i>
+                                        <p>助学贷款</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fa fa-circle-o "></i>
+                                        <p>住房贷款</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fa fa-circle-o "></i>
+                                        <p>自助贷款</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-bars"></i>
+                                <p>外汇</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-credit-card"></i>
+                                <p>信用卡</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/bank" class="nav-link">
+                                <i class="nav-icon fa fa-globe"></i>
+                                <p>网上银行</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/login" class="nav-link">
+                                <i class="nav-icon fa fa-cog"></i>
+                                <p>银行管理</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+    </div>
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/" class="nav-link">银行管理系统</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/" class="nav-link">开通网上银行</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>银行管理</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">银行管理</a></li>
+                            <li class="breadcrumb-item active">首页</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+
+        <section class="content">
+
+            <div class="alert alert-success alert-dismissible">
+                <h5><i class="icon fa fa-check"></i> 欢迎!</h5>
+                您现在正以储蓄部门员工身份登陆
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">所有储蓄记录</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="table1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>所属账户ID</th>
+                                    <th>所属账户名称</th>
+                                    <th>币种</th>
+                                    <th>金额</th>
+                                    <th>起息日</th>
+                                    <th>存期</th>
+                                    <th>利率</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>账户一</td>
+                                    <td>人民币</td>
+                                    <td>0.00</td>
+                                    <td>2018-5-28</td>
+                                    <td>5年</td>
+                                    <td>0.01</td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+
+                    <div th:if="${true}" class="card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">所有信用卡记录</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="table2" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>所属账户ID</th>
+                                    <th>所属账户名称</th>
+                                    <th>币种</th>
+                                    <th>金额</th>
+                                    <th>起息日</th>
+                                    <th>存期</th>
+                                    <th>利率</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>账户一</td>
+                                    <td>人民币</td>
+                                    <td>0.00</td>
+                                    <td>2018-5-28</td>
+                                    <td>5年</td>
+                                    <td>0.01</td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">所有贷款记录</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h4 style="margin: 30px;">没有更多数据了</h4>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card card-primary" style="height: 500px;">
+                        <div class="card-header">
+                            <h3 class="card-title">各类储蓄、贷款的利率</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form class="form-group">
+                                <label for="a">活期利率</label>
+                                <input id="a" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <label for="b">整存整取利率</label>
+                                <input id="b" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <label for="c">定活两便利率</label>
+                                <input id="c" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+
+                                <button class="btn-success btn btn-block form-control" style="margin-top: 20px;">提交
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card card-danger" style="height: 500px;">
+                        <div class="card-header">
+                            <h3 class="card-title">信用卡利息及预借现金手续费</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form class="form-group">
+                                <label for="d">信用卡利率</label>
+                                <input id="d" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <button class="btn-success btn btn-block form-control" style="margin-top: 20px;">提交
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card card-warning" style="height: 500px;">
+                        <div class="card-header">
+                            <h3 class="card-title">各种外汇之间的市场汇率以及银行各档次交易价格</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 style="margin-top: 30px;">没有更多数据</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-primary alert-dismissible">
+                        <h5><i class="icon fa fa-info"></i> 提示!</h5>
+                        当前计划正在进行
+                    </div>
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">所有计划列表</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>计划ID</th>
+                                    <th>计划开始时间</th>
+                                    <th>计划状态</th>
+                                    <th>活期利率</th>
+                                    <th>整存整取利率</th>
+                                    <th>定活两便利率</th>
+                                    <th>信用卡利率</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2018-5-9 18:30</td>
+                                    <td>正在执行</td>
+                                    <td>0.01</td>
+                                    <td>0.02</td>
+                                    <td>0.06</td>
+                                    <td>0.01</td>
+                                    <td>
+                                        <button class="btn btn-success" onclick="x()">启用</button>
+                                        <button class="btn btn-warning" onclick="y()">取消</button>
+                                        <button class="btn btn-danger" onclick="z()">删除</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">新增计划</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <form class="form-group">
+
+                                <label>时间范围</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i
+                                            class="fa fa-calendar"></i></span></div>
+                                    <input type="text" name="range" class="form-control float-right"
+                                           id="reservationtime">
+                                </div>
+                                <label for="a"1>活期利率</label>
+                                <input id="a1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <label for="b1">整存整取利率</label>
+                                <input id="b1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <label for="c1">定活两便利率</label>
+                                <input id="c1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <label for="d1">信用卡利率</label>
+                                <input id="d1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <button class="btn-success btn btn-block form-control" style="margin-top: 20px;">添加计划
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <script>
+
+        function x() {
+            if (confirm("确定启动计划吗？"))
+                alert("计划已启动！")
+        }
+
+        function y() {
+            if (confirm("确定要取消计划吗？"))
+                alert("计划已取消！")
+        }
+
+        function z() {
+            if (confirm("确定要删除计划吗？"))
+                alert("计划已删除！")
+        }
+    </script>
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 3.0.0-alpha
+        </div>
+        <strong>Copyright &copy; 2014-2018 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
+        reserved.
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="/js/daterangepicker.js"></script>
+</body>
+<script>
+    $(function () {
+
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            format: 'MM/DD/YYYY h:mm A'
+        })
+        //Date range picker with time picker
+    })
+</script>
+</html>

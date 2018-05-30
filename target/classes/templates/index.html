@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,8 +15,16 @@
     <link rel="stylesheet" href="/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <style>
+        label{
+            margin-top: 8px;
+        }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini">
+
+
 <!-- Site wrapper -->
 <div class="wrapper">
     <div class="wrapper">
@@ -26,7 +34,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/" class="nav-link">
                                 <i class="nav-icon fa fa-bookmark"></i>
                                 <p>储蓄</p>
                             </a>
@@ -64,7 +72,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/card" class="nav-link">
                                 <i class="nav-icon fa fa-credit-card"></i>
                                 <p>信用卡</p>
                             </a>
@@ -97,9 +105,6 @@
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="/" class="nav-link">银行管理系统</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">开通网上银行</a>
-            </li>
         </ul>
     </nav>
     <!-- /.navbar -->
@@ -129,6 +134,81 @@
         <section class="content">
 
             <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">可选账户信息</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="card-body" style="height: 550px">
+                            <div class="alert alert-primary alert-dismissible">
+                                <h5><i class="icon fa fa-info"></i> 账号要求</h5>
+                                账号为5为数字，第一位代表币种，第二位代表储蓄类型
+                            </div>
+
+                            <div class="alert alert-warning alert-dismissible">
+                                <h5><i class="icon fa fa-info"></i> 可选币种</h5>
+                                <ol>
+                                    <li>人民币</li><li>美元</li><li>港币</li><li>日元</li><li>欧元</li>
+                                </ol>
+                            </div>
+
+                            <div class="alert alert-info alert-dismissible">
+                                <h5><i class="icon fa fa-info"></i> 可选储蓄类型</h5>
+                                <ol>
+                                    <li>活期</li><li>整存整取</li><li>定活两便</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">开通新账户</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="card-body" style="height: 550px">
+                            <div class="alert alert-danger alert-dismissible">
+                                <h5><i class="icon fa fa-ban"></i> 注意</h5>
+                                请仔细阅读账号要求，一旦开通账户后将无法修改！
+                            </div>
+
+                            <div th:if="${account}" class="alert alert-info alert-dismissible">
+                                <h5><i class="icon fa fa-info"></i> 提示 </h5>
+                                <p th:text="${account}"></p>
+                            </div>
+                            <form  class="form-group" action="/account" method="post">
+
+                                <label>账号</label>
+                                <input class="form-control" name="id" placeholder="五位数字" type="number" required="required">
+
+                                <label>账户名称</label>
+                                <input class="form-control" name="name" required="required" type="text">
+
+                                <label>密码</label>
+                                <input class="form-control" name="password" required="required" type="password">
+
+                                <button type="submit" style="margin-top: 15px;" class="btn btn-success btn-block">提交</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-lg-4">
                     <div class="card card-success">
                         <div class="card-header">
@@ -143,25 +223,32 @@
                                     <i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="card-body"  style="height: 800px;">
+                        <div class="card-body" style="height: 800px;">
 
                             <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
                                 <h5><i class="icon fa fa-ban"></i> 错误!</h5>
                                 没有这张卡或输入金额有误!
                             </div>
 
                             <h4 style="margin:50px 20px;">活期储蓄是指无固定存期、可随时存取、存取金额不限的一种比较灵活的储蓄方式。所有币种 1 元起存。</h4>
 
-                            <form class="form-group">
+                            <form class="form-group" action="/saveOne" method="post">
 
-                                <label for="id">账户ID</label>
-                                <input class="form-control" id="id" type="number">
+                                <label>账户账号</label>
+                                <select class="form-control" name="id" th:each="id : ${ids}">
+                                    <option th:text="${id}"></option>
+                                </select>
 
-                                <label for="money">存入金额</label>
-                                <input class="form-control" id="money" type="number">
+                                <label>存入金额</label>
+                                <input class="form-control" name="money" type="number" required="required" placeholder="使用负值代表取款">
 
-                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交</button>
+                                <label >账户密码</label>
+                                <input class="form-control" name="password"  type="password" required="required">
+
+                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
                             </form>
 
                         </div>
@@ -185,9 +272,10 @@
                                     <i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="card-body"  style="height: 800px;">
+                        <div class="card-body" style="height: 800px;">
                             <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
                                 <h5><i class="icon fa fa-ban"></i> 错误!</h5>
                                 没有这张卡或输入金额有误!
                             </div>
@@ -196,18 +284,20 @@
                                 <li><h5>整存整取是一种由客户选择存款期限，整笔存入，到期提取本息的一种定期储蓄。所有币种 100 元起存。存期可
                                     选择一年和五年。</h5></li>
                                 <li><h5>整存整取存款未到期时可以部分提前支取一次，但提前支取部分将按支取当日挂牌活期存款利率计息，未支取部
-                                    分仍按照原利率计息。</h5> </li>
+                                    分仍按照原利率计息。</h5></li>
                                 <li><h5>整存整取存款可以预先设定续存。续存时整存整取的本息将一并计入新的本金。如未设定续存，将自动转为活期
                                     储蓄。 </h5></li>
                             </ul>
 
                             <form class="form-group">
 
-                                <label for="id1">账户ID</label>
-                                <input class="form-control" id="id1" type="number">
+                                <label>账户账号</label>
+                                <select class="form-control" name="id" th:each="id : ${ids}">
+                                    <option th:text="${id}"></option>
+                                </select>
 
                                 <label for="money1">存入金额</label>
-                                <input class="form-control" id="money1" type="number">
+                                <input class="form-control" id="money1" type="number" required="required">
 
                                 <label class="radio-inline" style="margin-top: 10px;">
                                     <input type="radio" name="type" value="1" checked> 一年
@@ -215,8 +305,11 @@
                                 <label class="radio-inline">
                                     <input type="radio" name="type" value="5"> 五年
                                 </label>
-
-                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交</button>
+                                <label>
+                                    <input type="checkbox" name="flag" >自动续存
+                                </label>
+                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
                             </form>
                         </div>
                         <div class="card-footer">
@@ -227,7 +320,7 @@
 
                 <div class="col-lg-4">
                     <div class="card card-primary">
-                        <div class="card-header" >
+                        <div class="card-header">
                             <h3 class="card-title">定活两便储蓄存款</h3>
 
                             <div class="card-tools">
@@ -239,10 +332,11 @@
                                     <i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="card-body"  style="height: 800px;">
+                        <div class="card-body" style="height: 800px;">
 
                             <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
                                 <h5><i class="icon fa fa-ban"></i> 错误!</h5>
                                 没有这张卡或输入金额有误!
                             </div>
@@ -254,13 +348,16 @@
 
                             <form class="form-group">
 
-                                <label for="id2">账户ID</label>
-                                <input class="form-control" id="id2" type="number">
+                                <label>账户账号</label>
+                                <select class="form-control" name="id" th:each="id : ${ids}">
+                                    <option th:text="${id}"></option>
+                                </select>
 
                                 <label for="money2">存入金额</label>
                                 <input class="form-control" id="money2" type="number">
 
-                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交</button>
+                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
                             </form>
                         </div>
                         <div class="card-footer">

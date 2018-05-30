@@ -3,19 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>网上银行</title>
+    <title>信用卡概览</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/dataTables.bootstrap4.min.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/dataTables.bootstrap4.min.css">
-
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/css/adminlte.min.css">
-    <link rel="stylesheet" href="/css/daterangepicker-bs3.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
@@ -101,10 +99,7 @@
                 <a href="/" class="nav-link">银行管理系统</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">修改密码</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">转账</a>
+                <a href="/" class="nav-link">开通网上银行</a>
             </li>
         </ul>
     </nav>
@@ -119,11 +114,11 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>网上银行</h1>
+                        <h1>信用卡一览</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">网上银行</a></li>
+                            <li class="breadcrumb-item"><a href="#">储蓄</a></li>
                             <li class="breadcrumb-item active">首页</li>
                         </ol>
                     </div>
@@ -133,62 +128,12 @@
 
         <!-- Main content -->
         <section class="content">
-
             <div class="row">
-            <div class="col-12">
-
-                <div class="card card-success">
-                    <div class="card-header">
-                        <h3 class="card-title">所有子账户</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
-                                    title="Collapse">
-                                <i class="fa fa-minus"></i></button>
-                            <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
-                                    title="Remove">
-                                <i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="table" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>账户ID</th>
-                                <th>账户名称</th>
-                                <th>币种</th>
-                                <th>余额</th>
-                                <th>起息日</th>
-                                <th>存期</th>
-                                <th>利率</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>账户一</td>
-                                <td>人民币</td>
-                                <td>0.00</td>
-                                <td>2018-5-28</td>
-                                <td>5年</td>
-                                <td>0.01</td>
-                            </tr>
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
-        </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary">
+                <div class="col-lg-4">
+                    <div class="card card-success">
                         <div class="card-header">
-                            <h3 class="card-title">查询交易记录</h3>
+                            <h3 class="card-title">刷卡消费</h3>
+
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
                                         title="Collapse">
@@ -198,58 +143,135 @@
                                     <i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div>
-                                <form class="form-group">
-                                    <label>时间范围</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text"><i
-                                                class="fa fa-calendar"></i></span></div>
-                                        <input type="text" name="range" class="form-control float-right"
-                                               id="reservation">
-                                        <button type="submit" class="btn btn-success" style="margin: 0 10px;">查询
-                                        </button>
-                                    </div>
-                                </form>
-                                <table id="table2" style="margin-top: 20px" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>账户ID</th>
-                                        <th>账户名称</th>
-                                        <th>币种</th>
-                                        <th>余额</th>
-                                        <th>起息日</th>
-                                        <th>存期</th>
-                                        <th>利率</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>账户一</td>
-                                        <td>人民币</td>
-                                        <td>0.00</td>
-                                        <td>2018-5-28</td>
-                                        <td>5年</td>
-                                        <td>0.01</td>
-                                    </tr>
-                                    </tbody>
+                        <div class="card-body" style="height: 800px;">
 
-                                </table>
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
+                                没有这张卡或输入金额有误超出了限制!
                             </div>
+
+                            <h4 style="margin:50px 20px;">信用卡可以在特约商户刷卡消费，并可享受最短 20 天，最长 50 天的免息还款期。免息还款期是指从银行记账日
+                                至到期还款日之间的日期。信用卡的到期还款日为下月 20 日。刷卡消费无需密码。</h4>
+
+                            <form class="form-group">
+
+                                <label for="id">消费商户名称</label>
+                                <input class="form-control" id="id" type="text">
+
+                                <label for="card">信用卡卡号</label>
+                                <input class="form-control" id="card" type="number">
+
+                                <label for="money">金额</label>
+                                <input class="form-control" id="money" type="number">
+
+                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
+                            </form>
+
+                        </div>
+                        <div class="card-footer">
+
                         </div>
                     </div>
                 </div>
 
+                <div class="col-lg-4">
+                    <div class="card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">预借现金</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="height: 800px;">
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
+                                没有这张卡或输入金额有误超出了限制!
+                            </div>
+                            <h4 style="margin:50px 20px;">信用卡可以在 ATM 上预借现金。预借现金不享受免息还款期待遇，按日息万分之五收费至清偿日止。预借现金
+                                额度为信用额度的 70%。每笔预借现金按照所借现金额的千分之三收取手续费，四舍五入到分，最低 1 元。预
+                                借现金的密码可通过网上银行修改。</h4>
+                            <form class="form-group">
+
+                                <label for="id1">卡号</label>
+                                <input class="form-control" id="id1" type="number">
+
+                                <label for="money1">借款金额</label>
+                                <input class="form-control" id="money1" type="number">
+
+                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">信用卡还款</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="height: 800px;">
+
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
+                                没有这张卡或输入金额有误!
+                            </div>
+
+                            <h4 style="margin:50px 20px;">
+                                客户在还款日之前应还清所有款项，也可以选择以最低还款额方式还款。选择最低还款额还款方式不享受免息还
+                                款期待遇，按日息万分之五收取利息，并按月计收复利。
+                            </h4>
+
+                            <form class="form-group">
+
+                                <label for="id2">信用卡卡号</label>
+                                <input class="form-control" id="id2" type="number">
+
+                                <label for="money2">还款金额</label>
+                                <input class="form-control" id="money2" type="number">
+
+                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h5>资产分析</h5>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="card card-warning">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fa fa-bar-chart-o"></i>
-                                财产走势图
+                                可用额度走势图
                             </h3>
 
                             <div class="card-tools">
@@ -272,7 +294,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fa fa-bar-chart-o"></i>
-                                财产分布图
+                                信用卡总财产分布图
                             </h3>
 
                             <div class="card-tools">
@@ -291,8 +313,60 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">所有信用卡</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>卡号</th>
+                                    <th>开卡时间</th>
+                                    <th>总额度</th>
+                                    <th>可用额度</th>
+                                    <th>本月待还</th>
+                                    <th>信用卡状态</th>
+                                    <th>已产生利息</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>10000000001</td>
+                                    <td>2018/05/29</td>
+                                    <td>10000</td>
+                                    <td>8000</td>
+                                    <td>2000</td>
+                                    <td>正常</td>
+                                    <td>150</td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
         </section>
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
 
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
@@ -316,16 +390,10 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/dataTables.bootstrap4.min.js"></script>
-<script src="/js/jquery.slimscroll.min.js"></script>
-<script src="/js/demo.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
-<script src="/js/daterangepicker.js"></script>
 <script src="/js/jquery.flot.min.js"></script>
 <script src="/js/jquery.flot.pie.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap4.min.js"></script>
 <script>
     $(function () {
         $('#table').DataTable({
@@ -336,25 +404,6 @@
             "info": true,
             "autoWidth": false
         });
-        $('#table2').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
-        });
-    });
-</script>
-<script>
-    $(function () {
-
-        $('#reservation').daterangepicker()
-        //Date range picker with time picker
-    })
-</script>
-<script>
-    $(function () {
 
         /*
          * LINE CHART
@@ -362,21 +411,16 @@
          */
         //LINE randomly generated data
 
-        var sin = [],
-            cos = [];
+        var sin = [];
         for (var i = 0; i < 14; i += 0.5) {
             sin.push([i, Math.sin(i)]);
-            cos.push([i, Math.cos(i)])
+
         }
         var line_data1 = {
             data: sin,
             color: '#3c8dbc'
         };
-        var line_data2 = {
-            data: cos,
-            color: '#00c0ef'
-        };
-        $.plot('#line-chart', [line_data1, line_data2], {
+        $.plot('#line-chart', [line_data1], {
             grid: {
                 hoverable: true,
                 borderColor: '#f3f3f3',
@@ -403,29 +447,7 @@
                 show: true
             }
         });
-        //Initialize tooltip on hover
-        $('<div class="tooltip-inner" id="line-chart-tooltip"></div>').css({
-            position: 'absolute',
-            display: 'none',
-            opacity: 0.8
-        }).appendTo('body');
-        $('#line-chart').bind('plothover', function (event, pos, item) {
 
-            if (item) {
-                var x = item.datapoint[0].toFixed(2),
-                    y = item.datapoint[1].toFixed(2);
-
-                $('#line-chart-tooltip').html(item.series.label + ' of ' + x + ' = ' + y)
-                    .css({
-                        top: item.pageY + 5,
-                        left: item.pageX + 5
-                    })
-                    .fadeIn(200)
-            } else {
-                $('#line-chart-tooltip').hide()
-            }
-
-        });
 
         /*
          * DONUT CHART
@@ -434,19 +456,14 @@
 
         var donutData = [
             {
-                label: 'Series2',
+                label: '可用',
                 data: 30,
                 color: '#bc0000'
             },
             {
-                label: 'Series3',
-                data: 20,
+                label: '欠款',
+                data: 70,
                 color: '#0000b7'
-            },
-            {
-                label: 'Series4',
-                data: 50,
-                color: '#00ef00'
             }
         ];
         $.plot('#donut-chart', donutData, {
@@ -485,5 +502,7 @@
             + Math.round(series.percent) + '%</div>'
     }
 </script>
+
+<!-- AdminLTE for demo purposes -->
 </body>
 </html>

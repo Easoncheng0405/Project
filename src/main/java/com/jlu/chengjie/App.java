@@ -3,8 +3,7 @@ package com.jlu.chengjie;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 个人博客:http://www.chengjie-jlu.com
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @SpringBootApplication
-@Controller
 public class App {
 
 
@@ -24,10 +22,7 @@ public class App {
     }
 
 
-    @GetMapping("/")
-    public String get(){
 
-        return "index";
-    }
+
 
 }

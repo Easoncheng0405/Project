@@ -9,6 +9,8 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/dataTables.bootstrap4.min.css">
+
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
@@ -31,7 +33,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/" class="nav-link">
                                 <i class="nav-icon fa fa-bookmark"></i>
                                 <p>储蓄</p>
                             </a>
@@ -69,7 +71,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/card" class="nav-link">
                                 <i class="nav-icon fa fa-credit-card"></i>
                                 <p>信用卡</p>
                             </a>
@@ -472,6 +474,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
+
 <script src="/js/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/js/bootstrap.bundle.min.js"></script>
@@ -480,7 +483,29 @@
 <!-- AdminLTE for demo purposes -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
 <script src="/js/daterangepicker.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap4.min.js"></script>
 </body>
+<script>
+    $(function () {
+        $('#table1').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+        $('#table2').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>
 <script>
     $(function () {
 

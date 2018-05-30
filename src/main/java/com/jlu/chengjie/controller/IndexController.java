@@ -47,7 +47,7 @@ public class IndexController {
             ids.add(account.getNumber());
 
         model.addAttribute("ids",ids);
-        return "redirect:/index";
+        return "index";
     }
 
     @PostMapping("/account")
@@ -56,14 +56,14 @@ public class IndexController {
 
         if (id < 11000 || id > 53000) {
             model.addAttribute("account", "账号不符合规则");
-            return "/index";
+            return "index";
         }
 
         Account account = repository.findByNumber(id);
 
         if (account != null) {
             model.addAttribute("account", "此账号已使用");
-            return "redirect:/index";
+            return "index";
         }
 
         account = new Account();
@@ -77,7 +77,8 @@ public class IndexController {
         account.setUser((User) session.getAttribute("CURRENT_USER"));
 
         repository.save(account);
-        return "redirect:/index";
+
+        return "redirect:/";
 
     }
 
@@ -90,6 +91,6 @@ public class IndexController {
         System.out.println(id+"--"+password+"--"+money);
 
 
-        return "redirect:/index";
+        return "index";
     }
 }

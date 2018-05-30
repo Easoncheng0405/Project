@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
  * 创建时间 2018/5/28
  */
 @Controller
-@RequestMapping("login")
+@RequestMapping("/login")
 public class LoginController {
 
 
@@ -40,19 +40,18 @@ public class LoginController {
 
 
     @PostMapping
-    public String post(@RequestParam(value = "next",required = false)String next,Model model,
-                       @RequestParam long id,@RequestParam String password,HttpSession session){
+    public String post(Model model, @RequestParam long id,@RequestParam String password,HttpSession session){
 
         User user=repository.findByPidAndPassword(id,password);
 
         if(user==null){
             model.addAttribute("message","用户名或密码错误");
-            return "/login";
+            return "login";
         }
 
         session.setAttribute("CURRENT_USER",user);
 
-        return "redirect:/index";
+        return "redirect:/";
     }
 
 }

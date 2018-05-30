@@ -237,8 +237,8 @@
                             <form class="form-group" action="/saveOne" method="post">
 
                                 <label>账户账号</label>
-                                <select class="form-control" name="id" th:each="id : ${ids}">
-                                    <option th:text="${id}"></option>
+                                <select class="form-control" name="id">
+                                    <option th:each="id:${ids}"  th:text="${id}"></option>
                                 </select>
 
                                 <label>存入金额</label>
@@ -292,8 +292,8 @@
                             <form class="form-group">
 
                                 <label>账户账号</label>
-                                <select class="form-control" name="id" th:each="id : ${ids}">
-                                    <option th:text="${id}"></option>
+                                <select class="form-control" name="id">
+                                    <option th:each="id:${ids}"  th:text="${id}"></option>
                                 </select>
 
                                 <label for="money1">存入金额</label>
@@ -349,8 +349,8 @@
                             <form class="form-group">
 
                                 <label>账户账号</label>
-                                <select class="form-control" name="id" th:each="id : ${ids}">
-                                    <option th:text="${id}"></option>
+                                <select class="form-control" name="id">
+                                    <option th:each="id:${ids}"  th:text="${id}"></option>
                                 </select>
 
                                 <label for="money2">存入金额</label>

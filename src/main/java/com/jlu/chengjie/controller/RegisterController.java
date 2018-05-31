@@ -23,11 +23,11 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/register")
 public class RegisterController {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     @Autowired
     public RegisterController(UserRepository repository) {
-        this.repository = repository;
+        this.userRepository = repository;
     }
 
     @GetMapping
@@ -41,15 +41,15 @@ public class RegisterController {
     @PostMapping
     public String post(User user, HttpSession session, Model model){
 
-        if(repository.findUserByPid(user.getPid())!=null){
+        if(userRepository.findUserByPid(user.getPid())!=null){
             model.addAttribute("user",user);
             model.addAttribute("message","这个号码已经被注册了");
             return "register";
         }
 
 
-        user.setNumber(repository.findAll().size()+Constant.NUMBER);
-        session.setAttribute("CURRENT_USER",repository.save(user));
+        user.setNumber(userRepository.findAll().size()+Constant.NUMBER);
+        session.setAttribute("CURRENT_USER", userRepository.save(user));
 
         return "redirect:/";
     }

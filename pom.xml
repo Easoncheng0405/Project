@@ -57,7 +57,7 @@
         </dependency>
     </dependencies>
     <repositories>
-        <repository>
+        <accountRepository>
             <id>aliyun-nexus</id>
             <name>Aliyun Maven Repository</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
@@ -67,7 +67,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </accountRepository>
     </repositories>
 
 </project>

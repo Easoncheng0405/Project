@@ -1,7 +1,6 @@
 package com.jlu.chengjie.config;
 
 import com.jlu.chengjie.fifter.LoginInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,12 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Component
 public class InterceptorConfig implements WebMvcConfigurer {
 
-   // private final UserService service;
 
-   // @Autowired
-    //public InterceptorConfig(UserService service){
-      //  this.service=service;
-   // }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

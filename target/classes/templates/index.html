@@ -115,6 +115,13 @@
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
+
+            <div th:if="${message}" class="alert alert-success alert-dismissible">
+                <h5><i class="icon fa fa-check"></i> 消息!</h5>
+                <p th:text="${message}"></p>
+            </div>
+
+
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
@@ -225,20 +232,20 @@
                         </div>
                         <div class="card-body" style="height: 800px;">
 
-                            <div class="alert alert-danger alert-dismissible">
+                            <div th:if="${one}" class="alert alert-danger alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
                                 </button>
                                 <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                没有这张卡或输入金额有误!
+                                <p th:text="${one}"></p>
                             </div>
 
                             <h4 style="margin:50px 20px;">活期储蓄是指无固定存期、可随时存取、存取金额不限的一种比较灵活的储蓄方式。所有币种 1 元起存。</h4>
 
-                            <form class="form-group" action="/saveOne" method="post">
+                            <form id="one" class="form-group" action="/saveOne" method="post">
 
                                 <label>账户账号</label>
                                 <select class="form-control" name="id">
-                                    <option th:each="id:${ids}"  th:text="${id}"></option>
+                                    <option th:each="id:${ids1}"  th:text="${id}"></option>
                                 </select>
 
                                 <label>存入金额</label>
@@ -293,11 +300,14 @@
 
                                 <label>账户账号</label>
                                 <select class="form-control" name="id">
-                                    <option th:each="id:${ids}"  th:text="${id}"></option>
+                                    <option th:each="id:${ids2}"  th:text="${id}"></option>
                                 </select>
 
                                 <label for="money1">存入金额</label>
                                 <input class="form-control" id="money1" type="number" required="required">
+
+                                <label >账户密码</label>
+                                <input class="form-control" name="password"  type="password" required="required">
 
                                 <label class="radio-inline" style="margin-top: 10px;">
                                     <input type="radio" name="type" value="1" checked> 一年
@@ -350,11 +360,14 @@
 
                                 <label>账户账号</label>
                                 <select class="form-control" name="id">
-                                    <option th:each="id:${ids}"  th:text="${id}"></option>
+                                    <option th:each="id:${ids3}"  th:text="${id}"></option>
                                 </select>
 
                                 <label for="money2">存入金额</label>
                                 <input class="form-control" id="money2" type="number">
+
+                                <label >账户密码</label>
+                                <input class="form-control" name="password"  type="password" required="required">
 
                                 <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
                                 </button>

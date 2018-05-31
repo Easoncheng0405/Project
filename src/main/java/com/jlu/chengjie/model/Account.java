@@ -46,6 +46,8 @@ public class Account {
     private String state;
 
 
+    private String password;
+
     @ManyToOne
     private User user;
 
@@ -96,6 +98,14 @@ public class Account {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public User getUser() {

@@ -4,7 +4,6 @@ import com.jlu.chengjie.model.User;
 import com.jlu.chengjie.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,16 +23,15 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     @Autowired
     public LoginController(UserRepository repository) {
-        this.repository = repository;
+        this.userRepository = repository;
     }
 
     @GetMapping
     public String get(){
-
 
         return "login";
     }
@@ -42,7 +40,7 @@ public class LoginController {
     @PostMapping
     public String post(Model model, @RequestParam long id,@RequestParam String password,HttpSession session){
 
-        User user=repository.findByPidAndPassword(id,password);
+        User user= userRepository.findByPidAndPassword(id,password);
 
         if(user==null){
             model.addAttribute("message","用户名或密码错误");

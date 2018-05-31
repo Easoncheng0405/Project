@@ -19,5 +19,20 @@ public class Constant {
      */
     public final static long NUMBER= 1000000000L;
 
+    /**
+     * 账户正常
+     */
+    public final static String ACCOUNT_NORMAL="正常";
 
+
+    /**
+     * 账户冻结
+     */
+    public final static String ACCOUNT_FREEZE="冻结";
+
+
+    /**
+     * 活期储蓄
+     */
+    public final static String SAVE_ONE="活期储蓄";
 }

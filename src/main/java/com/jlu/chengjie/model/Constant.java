@@ -35,4 +35,18 @@ public class Constant {
      * 活期储蓄
      */
     public final static String SAVE_ONE="活期储蓄";
+
+    public final static String SAVE_TWO_ONE_YEAR_FALSE="整存整取一年不续存";
+
+
+    public final static String SAVE_TWO_FIVE_YEAR_FALSE="整存整取五年不续存";
+
+
+    public final static String SAVE_TWO_ONE_YEAR_TRUE="整存整取一年续存";
+
+
+    public final static String SAVE_TWO_FIVE_YEAR_TRUE="整存整取五年续存";
+
+
+    public final static String SAVE_THREE="定活两便";
 }

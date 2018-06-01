@@ -131,7 +131,7 @@ public class IndexController {
         if (money > 0)
             redirectAttributes.addFlashAttribute("message", ("成功存入活期账户：" + id + " 人民币" + money + " 元"));
         else
-            redirectAttributes.addFlashAttribute("message", ("成功从活期账户：" + id + " 取款  人民币" + (0-money) + " 元"));
+            redirectAttributes.addFlashAttribute("message", ("成功从活期账户：" + id + " 取款  人民币" + (0 - money) + " 元"));
 
         return "redirect:/";
     }
@@ -139,31 +139,109 @@ public class IndexController {
 
     @PostMapping("saveTwo")
     public String saveTwo(@RequestParam long id, @RequestParam double money, @RequestParam String password, Model model,
-                          @RequestParam int type, @RequestParam(required = false) String flag, HttpSession session) {
+                          @RequestParam int type, @RequestParam(required = false) String flag, HttpSession session,
+                          final RedirectAttributes redirectAttributes) {
 
         initAccount(model, session);
 
         Account account = accountRepository.findByNumberAndPassword(id, password);
 
         if (account == null) {
-            model.addAttribute("one", "密码不正确！");
+            model.addAttribute("two", "密码不正确！");
             return "index";
         }
 
         if (money >= 0 && money < 100) {
-            model.addAttribute("one", "最低需要存入100元！");
+            model.addAttribute("two", "最低需要存入100元！");
             return "index";
         }
 
 
         if (account.getMoney() + money < 0) {
-            model.addAttribute("one", "余额不足！");
+            model.addAttribute("two", "余额不足！");
+            return "index";
+        }
+
+        Record record = new Record();
+
+        record.setAccount(account);
+        record.setDate(new Date());
+        record.setMoney(money);
+        if (flag == null || flag.equals("")) {
+
+            if (type == 1)
+                record.setType(Constant.SAVE_TWO_ONE_YEAR_FALSE);
+            else
+                record.setType(Constant.SAVE_TWO_FIVE_YEAR_FALSE);
+
+        } else {
+            if (type == 1)
+                record.setType(Constant.SAVE_TWO_ONE_YEAR_TRUE);
+            else
+                record.setType(Constant.SAVE_TWO_FIVE_YEAR_TRUE);
+        }
+
+        account.setMoney(account.getMoney()+money);
+        accountRepository.save(account);
+
+        recordRepository.save(record);
+
+        if (money > 0)
+            redirectAttributes.addFlashAttribute("message", ("成功存入整存整取账户：" + id + " 人民币" + money + " 元"));
+        else
+            redirectAttributes.addFlashAttribute("message", ("成功从整存整取账户：" + id + " 取款  人民币" + (0 - money) + " 元"));
+
+        return "redirect:/";
+    }
+
+
+    @PostMapping("saveThree")
+    public String saveThree(@RequestParam long id, @RequestParam double money, @RequestParam String password,
+                            Model model, HttpSession session, final RedirectAttributes redirectAttributes){
+
+        initAccount(model, session);
+
+        Account account = accountRepository.findByNumberAndPassword(id, password);
+
+        if (account == null) {
+            model.addAttribute("three", "密码不正确！");
+            return "index";
+        }
+
+        if (money >= 0 && money < 1) {
+            model.addAttribute("three", "最低需要存入50元！");
             return "index";
         }
 
 
+        if (account.getMoney() + money < 0) {
+            model.addAttribute("three", "余额不足！");
+            return "index";
+        }
+
+        //生成一条交易记录
+        Record record = new Record();
+
+        record.setAccount(account);
+        record.setDate(new Date());
+        record.setMoney(money);
+        record.setType(Constant.SAVE_ONE);
+
+        //金额变动
+        account.setMoney(account.getMoney() + money);
+
+        //存储到数据库
+        accountRepository.save(account);
+        recordRepository.save(record);
+        if (money > 0)
+            redirectAttributes.addFlashAttribute("message", ("成功存入活期账户：" + id + " 人民币" + money + " 元"));
+        else
+            redirectAttributes.addFlashAttribute("message", ("成功从活期账户：" + id + " 取款  人民币" + (0 - money) + " 元"));
+
         return "redirect:/";
     }
+
+
 
     private void initAccount(Model model, HttpSession session) {
         List<Account> accounts = accountRepository.findByUser((User) session.getAttribute("CURRENT_USER"));

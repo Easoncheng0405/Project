@@ -279,12 +279,12 @@
                                     <i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="card-body" style="height: 800px;">
-                            <div class="alert alert-danger alert-dismissible">
+                        <div  class="card-body" style="height: 800px;">
+                            <div th:if="${two}" class="alert alert-danger alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
                                 </button>
                                 <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                没有这张卡或输入金额有误!
+                                <p th:text="${two}"></p>
                             </div>
 
                             <ul style="margin: 45px 20px">
@@ -296,7 +296,7 @@
                                     储蓄。 </h5></li>
                             </ul>
 
-                            <form class="form-group">
+                            <form class="form-group" action="/saveTwo" method="post">
 
                                 <label>账户账号</label>
                                 <select class="form-control" name="id">
@@ -304,7 +304,7 @@
                                 </select>
 
                                 <label for="money1">存入金额</label>
-                                <input class="form-control" id="money1" type="number" required="required">
+                                <input class="form-control" name="money" id="money1" type="number" required="required">
 
                                 <label >账户密码</label>
                                 <input class="form-control" name="password"  type="password" required="required">

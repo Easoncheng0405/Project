@@ -1,7 +1,7 @@
 package com.jlu.chengjie.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 
 /**
  * 个人博客:http://www.chengjie-jlu.com
@@ -14,50 +14,52 @@ import java.util.Date;
 public class Account {
 
     /**
-     * 账户卡号 5位数字
+     * 账户帐号 10位数字
      */
     @Id
-    private long number;
+    private long id;
 
     /**
-     * 账户名称，有别于用户名称
+     * 账户持有人姓名
      */
     private String name;
 
-    /**
-     * 金额
-     */
-    private double money;
 
     /**
-     * 利率
+     * 账户持有人身份证号
      */
-    private double v;
+    private String pid;
+
 
     /**
-     * 存入时间
+     * 账户持有人住址
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private String address;
+
+
+    /**
+     * 账户持有人联系电话
+     */
+    private String phone;
+
 
     /**
      * 账户状态
      */
     private String state;
 
-
+    /**
+     * 账户6为密码
+     */
     private String password;
 
-    @ManyToOne
-    private User user;
 
-
-    public long getNumber() {
-        return number;
+    public long getId() {
+        return id;
     }
 
-    public void setNumber(long number) {
-        this.number = number;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -68,28 +70,28 @@ public class Account {
         this.name = name;
     }
 
-    public double getMoney() {
-        return money;
+    public String getPid() {
+        return pid;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
-    public double getV() {
-        return v;
+    public String getAddress() {
+        return address;
     }
 
-    public void setV(double v) {
-        this.v = v;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public Date getDate() {
-        return date;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getState() {
@@ -108,11 +110,4 @@ public class Account {
         this.password = password;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

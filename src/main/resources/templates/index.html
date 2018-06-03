@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
     <style>
-        label{
+        label {
             margin-top: 8px;
         }
     </style>
@@ -34,7 +34,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="/" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-bookmark"></i>
                                 <p>储蓄</p>
                             </a>
@@ -42,7 +42,7 @@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-hand-paper-o "></i>
-                                <p>贷款 <i class="right fa fa-angle-left"></i></p>
+                                <p>贷款 <i class="right fa fa-angle-leftMoney"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
@@ -116,8 +116,9 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
 
-            <div th:if="${message}" class="alert alert-success alert-dismissible">
-                <h5><i class="icon fa fa-check"></i> 消息!</h5>
+            <div th:if="${message}" class="alert alert-dark alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fa fa-info"></i> 提示</h5>
                 <p th:text="${message}"></p>
             </div>
 
@@ -144,7 +145,7 @@
                 <div class="col-lg-6">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">可选账户信息</h3>
+                            <h3 class="card-title">存款</h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
@@ -153,32 +154,61 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 550px">
+                        <div class="card-body">
                             <div class="alert alert-primary alert-dismissible">
-                                <h5><i class="icon fa fa-info"></i> 账号要求</h5>
-                                账号为5为数字，第一位代表币种，第二位代表储蓄类型
-                            </div>
-
-                            <div class="alert alert-warning alert-dismissible">
-                                <h5><i class="icon fa fa-info"></i> 可选币种</h5>
+                                <h5><i class="icon fa fa-info"></i> 提示</h5>
                                 <ol>
-                                    <li>人民币</li><li>美元</li><li>港币</li><li>日元</li><li>欧元</li>
+                                    <li><h5>活期储蓄</h5>活期储蓄是指无固定存期、可随时存取、存取金额不限的一种比较灵活的储蓄方式。所有币种 1 元起存。</li>
+                                    <li>
+                                        <h5 style="margin-top: 4px;">整存整取定期储蓄</h5>
+                                        <ul>
+                                            <li>
+                                                整存整取是一种由客户选择存款期限，整笔存入，到期提取本息的一种定期储蓄。所有币种 100 元起存。存期可
+                                                选择一年和五年。
+                                            </li>
+                                            <li>
+                                                整存整取存款未到期时可以部分提前支取一次，但提前支取部分将按支取当日挂牌活期存款利率计息，未支取部
+                                                分仍按照原利率计息。
+                                            </li>
+                                            <li>
+                                                整存整取存款可以预先设定续存。续存时整存整取的本息将一并计入新的本金。如未设定续存，将自动转为活期
+                                                储蓄。
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <h5 style="margin-top: 4px;">定活两便储蓄存款</h5>
+                                        定活两便是一种事先不约定存期，一次性存入，一次性支取的储蓄存款。所有币种 50 元起存。存期在一年以内
+                                        的，按活期利率计息。存期超过一年（含一年）的，一律按一年期整存整取利率打六折计息。
+                                    </li>
                                 </ol>
                             </div>
+                            <form class="form-group" action="/save" method="post">
 
-                            <div class="alert alert-info alert-dismissible">
-                                <h5><i class="icon fa fa-info"></i> 可选储蓄类型</h5>
-                                <ol>
-                                    <li>活期</li><li>整存整取</li><li>定活两便</li>
-                                </ol>
-                            </div>
+                                <label for="select">选择一种储蓄类型</label>
+                                <select id="select" class="form-control" name="type">
+
+                                    <option th:each="type:${types}" th:text="${type}"></option>
+                                </select>
+
+                                <label>存入金额</label>
+                                <input class="form-control" name="money" type="number" required="required"  min="0.01" step="0.01" max="100000.00"
+                                       placeholder="输入存款金额">
+
+                                <label>账户密码</label>
+                                <input class="form-control" name="password" type="password" required="required"
+                                       placeholder="输入账户密码">
+
+                                <button class="btn btn-block btn-success" type="submit" style="margin-top: 20px;"> 提交
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">开通新账户</h3>
+                            <h3 class="card-title">取款</h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
@@ -187,194 +217,49 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 550px">
-                            <div class="alert alert-danger alert-dismissible">
-                                <h5><i class="icon fa fa-ban"></i> 注意</h5>
-                                请仔细阅读账号要求，一旦开通账户后将无法修改！
+                        <div class="card-body">
+
+                            <div class="alert alert-primary alert-dismissible">
+                                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                                <h5>计息起点</h5>
+                                储蓄存款利息计算时，本金以“元”为起息点，元以下的角、分不计息。利息的金额算至分位，分位以下四舍五入。
+                                <hr>
+                                <ol>
+
+                                    <li><h5>活期储蓄</h5>
+                                        活期储蓄(存折)存款的利息根据实际存期按天计算。每年结息一次(每年六月三十日为结息日)。结息时把“元”以上
+                                        利息并入本金，“元”以下角分部分转入下年利息余额内。
+                                        活期储蓄存款在存入期间遇有利率调整，按结息日挂牌公告的活期储蓄存款利率计算利息。全部支取活期储蓄存
+                                        款，按清户日挂牌公告的活期储蓄存款利率计付利息。
+                                    </li>
+                                    <li>
+                                        <h5>定期储蓄</h5>
+                                        定期储蓄存款的到期日，以对年对月对日为准，如到期日为该月所没有的，以月底日为到期日。
+                                        定期储蓄存款在存期内遇有利率调整，按存单开户日挂牌公告的相应的定期储蓄存款利率计付利息。
+                                        定期储蓄存款提前支取，按支取日挂牌公告的活期储蓄存款利率计付利息，部分提前支取的，提取部分按活期利
+                                        率计付利息，其余部分到期时按原定利率计息。
+                                    </li>
+                                </ol>
                             </div>
 
-                            <div th:if="${account}" class="alert alert-info alert-dismissible">
-                                <h5><i class="icon fa fa-info"></i> 提示 </h5>
-                                <p th:text="${account}"></p>
-                            </div>
-                            <form  class="form-group" action="/account" method="post">
+                            <form class="form-group" action="/get" method="post">
 
-                                <label>账号</label>
-                                <input class="form-control" name="id" placeholder="五位数字" type="number" required="required">
-
-                                <label>账户名称</label>
-                                <input class="form-control" name="name" required="required" type="text">
-
-                                <label>密码</label>
-                                <input class="form-control" name="password" required="required" type="password">
-
-                                <button type="submit" style="margin-top: 15px;" class="btn btn-success btn-block">提交</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card card-success">
-                        <div class="card-header">
-                            <h3 class="card-title">活期储蓄</h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
-                                        title="Collapse">
-                                    <i class="fa fa-minus"></i></button>
-                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
-                                        title="Remove">
-                                    <i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="height: 800px;">
-
-                            <div th:if="${one}" class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                <p th:text="${one}"></p>
-                            </div>
-
-                            <h4 style="margin:50px 20px;">活期储蓄是指无固定存期、可随时存取、存取金额不限的一种比较灵活的储蓄方式。所有币种 1 元起存。</h4>
-
-                            <form id="one" class="form-group" action="/saveOne" method="post">
-
-                                <label>账户账号</label>
+                                <label>选择一个储蓄子账户</label>
                                 <select class="form-control" name="id">
-                                    <option th:each="id:${ids1}"  th:text="${id}"></option>
+                                    <option th:each="option:${options}" th:text="${option}"></option>
                                 </select>
 
-                                <label>存入金额</label>
-                                <input class="form-control" name="money" type="number" required="required" placeholder="使用负值代表取款">
+                                <label>取出金额</label>
+                                <input class="form-control" name="money" type="number" required="required" min="0.01" step="0.01" max="100000.00"
+                                       placeholder="">
 
-                                <label >账户密码</label>
-                                <input class="form-control" name="password"  type="password" required="required">
+                                <label>账户密码</label>
+                                <input class="form-control" name="password" type="password" required="required"
+                                       placeholder="输入账户密码">
 
-                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
+                                <button class="btn btn-block btn-success" type="submit" style="margin-top: 20px;"> 提交
                                 </button>
                             </form>
-
-                        </div>
-                        <div class="card-footer">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="card card-warning">
-                        <div class="card-header">
-                            <h3 class="card-title">整存整取定期储蓄</h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
-                                        title="Collapse">
-                                    <i class="fa fa-minus"></i></button>
-                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
-                                        title="Remove">
-                                    <i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div  class="card-body" style="height: 800px;">
-                            <div th:if="${two}" class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                <p th:text="${two}"></p>
-                            </div>
-
-                            <ul style="margin: 45px 20px">
-                                <li><h5>整存整取是一种由客户选择存款期限，整笔存入，到期提取本息的一种定期储蓄。所有币种 100 元起存。存期可
-                                    选择一年和五年。</h5></li>
-                                <li><h5>整存整取存款未到期时可以部分提前支取一次，但提前支取部分将按支取当日挂牌活期存款利率计息，未支取部
-                                    分仍按照原利率计息。</h5></li>
-                                <li><h5>整存整取存款可以预先设定续存。续存时整存整取的本息将一并计入新的本金。如未设定续存，将自动转为活期
-                                    储蓄。 </h5></li>
-                            </ul>
-
-                            <form class="form-group" action="/saveTwo" method="post">
-
-                                <label>账户账号</label>
-                                <select class="form-control" name="id">
-                                    <option th:each="id:${ids2}"  th:text="${id}"></option>
-                                </select>
-
-                                <label for="money1">存入金额</label>
-                                <input class="form-control" name="money" id="money1" type="number" required="required">
-
-                                <label >账户密码</label>
-                                <input class="form-control" name="password"  type="password" required="required">
-
-                                <label class="radio-inline" style="margin-top: 10px;">
-                                    <input type="radio" name="type" value="1" checked> 一年
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="type" value="5"> 五年
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="flag" >自动续存
-                                </label>
-                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
-                                </button>
-                            </form>
-                        </div>
-                        <div class="card-footer">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">定活两便储蓄存款</h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
-                                        title="Collapse">
-                                    <i class="fa fa-minus"></i></button>
-                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
-                                        title="Remove">
-                                    <i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="height: 800px;">
-
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                没有这张卡或输入金额有误!
-                            </div>
-
-                            <h4 style="margin:50px 20px;">
-                                定活两便是一种事先不约定存期，一次性存入，一次性支取的储蓄存款。所有币种 50 元起存。存期在一年以内
-                                的，按活期利率计息。存期超过一年（含一年）的，一律按一年期整存整取利率打六折计息。
-                            </h4>
-
-                            <form class="form-group">
-
-                                <label>账户账号</label>
-                                <select class="form-control" name="id">
-                                    <option th:each="id:${ids3}"  th:text="${id}"></option>
-                                </select>
-
-                                <label for="money2">存入金额</label>
-                                <input class="form-control" id="money2" type="number">
-
-                                <label >账户密码</label>
-                                <input class="form-control" name="password"  type="password" required="required">
-
-                                <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
-                                </button>
-                            </form>
-                        </div>
-                        <div class="card-footer">
-
                         </div>
                     </div>
                 </div>

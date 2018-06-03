@@ -1,7 +1,7 @@
 package com.jlu.chengjie.controller;
 
-import com.jlu.chengjie.model.User;
-import com.jlu.chengjie.repository.UserRepository;
+import com.jlu.chengjie.model.Account;
+import com.jlu.chengjie.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,31 +23,31 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    public LoginController(UserRepository repository) {
-        this.userRepository = repository;
+    public LoginController(AccountRepository repository) {
+        this.accountRepository = repository;
     }
 
     @GetMapping
-    public String get(){
+    public String get() {
 
         return "login";
     }
 
 
     @PostMapping
-    public String post(Model model, @RequestParam long id,@RequestParam String password,HttpSession session){
+    public String post(Model model, @RequestParam String pid, @RequestParam String password, HttpSession session) {
 
-        User user= userRepository.findByPidAndPassword(id,password);
+        Account account = accountRepository.findByPidAndPassword(pid, password);
 
-        if(user==null){
-            model.addAttribute("message","用户名或密码错误");
+        if (account == null) {
+            model.addAttribute("message", "身份证号或密码错误");
             return "login";
         }
 
-        session.setAttribute("CURRENT_USER",user);
+        session.setAttribute("CURRENT_ACCOUNT", account);
 
         return "redirect:/";
     }

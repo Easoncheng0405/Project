@@ -18,7 +18,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String urls[]=new String[]{"/","/bank","/card"};
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns(urls);
+        //String urls[]=new String[]{"/one"};
+        //registry.addInterceptor(new LoginInterceptor()).addPathPatterns(urls);
     }
 }

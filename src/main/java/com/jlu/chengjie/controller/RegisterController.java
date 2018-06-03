@@ -1,8 +1,8 @@
 package com.jlu.chengjie.controller;
 
+import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.Constant;
-import com.jlu.chengjie.model.User;
-import com.jlu.chengjie.repository.UserRepository;
+import com.jlu.chengjie.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,33 +23,33 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/register")
 public class RegisterController {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    public RegisterController(UserRepository repository) {
-        this.userRepository = repository;
+    public RegisterController(AccountRepository repository) {
+        this.accountRepository = repository;
     }
 
     @GetMapping
     public String get(Model model){
 
-        model.addAttribute("user",new User());
+        model.addAttribute("account",new Account());
         return "register";
     }
 
 
     @PostMapping
-    public String post(User user, HttpSession session, Model model){
+    public String post(Account account, HttpSession session, Model model){
 
-        if(userRepository.findUserByPid(user.getPid())!=null){
-            model.addAttribute("user",user);
-            model.addAttribute("message","这个号码已经被注册了");
+        if(accountRepository.findByPid(account.getPid())!=null){
+            model.addAttribute("account",account);
+            model.addAttribute("message","这个身份证号码已经被注册了");
             return "register";
         }
 
 
-        user.setNumber(userRepository.findAll().size()+Constant.NUMBER);
-        session.setAttribute("CURRENT_USER", userRepository.save(user));
+        account.setId(accountRepository.findAll().size()+Constant.ID);
+        session.setAttribute("CURRENT_ACCOUNT", accountRepository.save(account));
 
         return "redirect:/";
     }

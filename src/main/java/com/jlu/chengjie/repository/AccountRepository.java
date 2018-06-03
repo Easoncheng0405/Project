@@ -1,7 +1,6 @@
 package com.jlu.chengjie.repository;
 
 import com.jlu.chengjie.model.Account;
-import com.jlu.chengjie.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,10 +13,7 @@ import java.util.List;
  */
 public interface AccountRepository  extends JpaRepository<Account,Long> {
 
+    Account findByPid(String pid);
 
-    Account findByNumber(long number);
-
-    Account findByNumberAndPassword(long number,String password);
-
-    List<Account> findByUser(User user);
+    Account findByPidAndPassword(String pid,String password);
 }

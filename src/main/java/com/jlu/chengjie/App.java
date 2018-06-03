@@ -2,6 +2,7 @@ package com.jlu.chengjie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +14,15 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @SpringBootApplication
+@EnableScheduling
 public class App {
 
 
     public static void main(String[] args){
 
         SpringApplication.run(App.class,args);
+
     }
-
-
 
 
 

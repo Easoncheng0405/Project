@@ -16,7 +16,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (request.getSession().getAttribute("CURRENT_USER") != null) {
+        if (request.getSession().getAttribute("CURRENT_ACCOUNT") != null) {
             return true;
         }
 

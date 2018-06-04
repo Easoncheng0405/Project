@@ -7,6 +7,7 @@ package com.jlu.chengjie.repository;
  */
 
 
+import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.Record;
 import com.jlu.chengjie.model.Savings;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,9 @@ import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    List<Record> findByDateBetween(Date st, Date ed);
+    List<Record> findByAccountAndDateBetween(Account account,Date st, Date ed);
 
     List<Record> findByS(Savings s);
+
+    List<Record> findByAccount(Account account);
 }

@@ -58,6 +58,12 @@ public class Record {
     @ManyToOne
     private Savings s;
 
+    /**
+     * 所属账户
+     */
+    @ManyToOne
+    private Account account;
+
 
     public long getId() {
         return id;
@@ -114,5 +120,13 @@ public class Record {
 
     public void setS(Savings s) {
         this.s = s;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

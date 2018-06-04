@@ -1,18 +1,14 @@
 package com.jlu.chengjie.controller;
 
-import com.jlu.chengjie.model.Constant;
-import com.jlu.chengjie.model.FormSavings;
-import com.jlu.chengjie.model.Record;
-import com.jlu.chengjie.model.Savings;
+import com.jlu.chengjie.model.*;
 import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +30,7 @@ public class NetBankController {
 
     private final RecordRepository recordRepository;
 
-
+    @Autowired
     public NetBankController(SavingRepository savingRepository, RecordRepository recordRepository) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
@@ -42,22 +38,27 @@ public class NetBankController {
 
 
     @GetMapping
-    public String get(@RequestParam(required = false) String range, Model model) throws ParseException {
+    public String get(HttpSession session, @RequestParam(required = false) String range, Model model) throws ParseException {
+
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
+
+        //未拿到当前账户，跳转到登陆页面
+        if (account == null)
+            return "redirect:/login";
 
         List<Record> records;
         if (range == null || range.equals(""))
-            records = recordRepository.findAll();
+            records = recordRepository.findByAccount(account);
         else {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date st = format.parse(range.substring(0, 19));
-            Date ed = format.parse(range.substring(25, 44));
+            Date ed = format.parse(range.substring(22, 41));
 
-            System.out.print(st + "---" + ed);
             if (st.after(ed)) {
                 model.addAttribute(Constant.MESSAGE, "起始时间应该在结束时间之前");
-                records = recordRepository.findAll();
+                records = recordRepository.findByAccount(account);
             } else {
-                records = recordRepository.findByDateBetween(st, ed);
+                records = recordRepository.findByAccountAndDateBetween(account, st, ed);
                 model.addAttribute("sss", "已显示所有" + st + "到" + ed + "间的交易记录");
             }
         }
@@ -67,7 +68,7 @@ public class NetBankController {
 
         List<FormSavings> savings = new ArrayList<>();
 
-        for (Savings s : savingRepository.findAll()) {
+        for (Savings s : savingRepository.findByEnableAndAccount(true, account)) {
 
             FormSavings form = new FormSavings();
             form.setId(s.getId());
@@ -107,11 +108,13 @@ public class NetBankController {
 
     @GetMapping("/data")
     @ResponseBody
-    public HashMap<String, Object> getData() {
+    public HashMap<String, Object> getData(HttpSession session) {
+
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
 
         HashMap<String, Object> map = new HashMap<>();
 
-        List<Savings> savings = savingRepository.findAll();
+        List<Savings> savings = savingRepository.findByEnableAndAccount(true, account);
 
         ArrayList<String> label = new ArrayList<>(savings.size());
 
@@ -145,7 +148,7 @@ public class NetBankController {
 
         map.put("label", label);
         map.put("res", res);
-        map.put("donut",donut);
+        map.put("donut", donut);
         return map;
     }
 

@@ -58,13 +58,12 @@ public class SavingController {
 
 
         List<String> options = new ArrayList<>();
-        List<Savings> savings = savingRepository.findAll();
+        List<Savings> savings = savingRepository.findByEnableAndAccount(true, account);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         //自选项选项
         for (Savings saving : savings)
-            if (saving.isEnable())
-                options.add(saving.getId() + ":" + saving.getMoney() + "元/" + dateFormat.format(saving.getDate()) + "存入");
+            options.add(saving.getId() + ":" + saving.getMoney() + "元/" + dateFormat.format(saving.getDate()) + "存入");
         model.addAttribute("options", options);
 
 
@@ -180,7 +179,7 @@ public class SavingController {
         record.setMoneyStart(new BigDecimal(0));
         record.setMoneyEnd(new BigDecimal(money));
         record.setMoneyType(mType);
-
+        record.setAccount(account);
 
         //存入数据库
         savings.setId(IDUtil.getId(savingRepository, type.substring(0, 4), mType));
@@ -233,6 +232,7 @@ public class SavingController {
         record.setType(Constant.GET);
         record.setMoneyType(savings.getMoneyType());
         record.setMoneyStart(savings.getMoney());
+        record.setAccount(account);
         switch (savings.getType()) {
             case Constant.SAVE_ONE: {
                 //全部取出

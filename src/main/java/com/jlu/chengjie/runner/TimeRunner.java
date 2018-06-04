@@ -1,5 +1,6 @@
 package com.jlu.chengjie.runner;
 
+import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.Constant;
 import com.jlu.chengjie.model.Record;
 import com.jlu.chengjie.model.Savings;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +40,9 @@ public class TimeRunner {
 
     private final RecordRepository recordRepository;
 
+
     @Autowired
-    public TimeRunner(SavingRepository savingRepository, RecordRepository recordRepository) {
+    public TimeRunner(SavingRepository savingRepository, RecordRepository recordRepository, HttpSession session) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
     }
@@ -67,6 +70,7 @@ public class TimeRunner {
             record.setMoneyStart(s.getMoney());
             record.setMoneyType(s.getMoneyType());
             record.setType(Constant.AUTO);
+            record.setAccount(s.getAccount());
             //存够一年
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE)
@@ -81,6 +85,8 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
+
+            System.out.println(1);
         }
     }
 
@@ -92,7 +98,7 @@ public class TimeRunner {
     public void run2() {
 
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByTypeAndEnable(Constant.SAVE_ONE, true);
+        List<Savings> savings = savingRepository.findByTypeAndEnable(Constant.SAVE_TWO, true);
 
         //利滚利
         for (Savings s : savings) {
@@ -107,6 +113,7 @@ public class TimeRunner {
             record.setMoneyStart(s.getMoney());
             record.setMoneyType(s.getMoneyType());
             record.setType(Constant.AUTO);
+            record.setAccount(s.getAccount());
 
             //存够一年
             long range = new Date().getTime() - s.getDate().getTime();
@@ -122,6 +129,7 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
+            System.out.println(2);
         }
     }
 
@@ -147,6 +155,7 @@ public class TimeRunner {
             record.setDate(new Date());
             record.setMoneyStart(s.getMoney());
             record.setMoneyType(s.getMoneyType());
+            record.setAccount(s.getAccount());
 
 
             long range = new Date().getTime() - s.getDate().getTime();
@@ -185,7 +194,7 @@ public class TimeRunner {
                 record.setS(savingRepository.save(s));
                 recordRepository.save(record);
             }
-
+            System.out.println(3);
         }
     }
 
@@ -211,6 +220,7 @@ public class TimeRunner {
             record.setDate(new Date());
             record.setMoneyStart(s.getMoney());
             record.setMoneyType(s.getMoneyType());
+            record.setAccount(s.getAccount());
 
 
             long range = new Date().getTime() - s.getDate().getTime();
@@ -254,8 +264,9 @@ public class TimeRunner {
                 recordRepository.save(record);
             }
 
-
+            System.out.println(4);
         }
+
 
     }
 
@@ -280,6 +291,8 @@ public class TimeRunner {
             record.setMoneyStart(s.getMoney());
             record.setMoneyType(s.getMoneyType());
             record.setType(Constant.CONTINUE);
+            record.setAccount(s.getAccount());
+
 
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE)
@@ -295,6 +308,7 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
+            System.out.println(5);
         }
     }
 
@@ -319,6 +333,8 @@ public class TimeRunner {
             record.setMoneyStart(s.getMoney());
             record.setMoneyType(s.getMoneyType());
             record.setType(Constant.CONTINUE);
+            record.setAccount(s.getAccount());
+
 
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE)
@@ -335,6 +351,7 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
+            System.out.println(6);
         }
     }
 }

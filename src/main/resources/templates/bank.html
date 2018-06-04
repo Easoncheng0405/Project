@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -117,6 +117,13 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
+
+                <div th:if="${message}" class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fa fa-info"></i> 错误</h5>
+                    <p th:text="${message}"></p>
+                </div>
+
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h1>网上银行</h1>
@@ -135,54 +142,60 @@
         <section class="content">
 
             <div class="row">
-            <div class="col-12">
+                <div class="col-12">
 
-                <div class="card card-success">
-                    <div class="card-header">
-                        <h3 class="card-title">所有子账户</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
-                                    title="Collapse">
-                                <i class="fa fa-minus"></i></button>
-                            <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
-                                    title="Remove">
-                                <i class="fa fa-times"></i></button>
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">所有子账户</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="table" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>账户ID</th>
-                                <th>账户名称</th>
-                                <th>币种</th>
-                                <th>余额</th>
-                                <th>起息日</th>
-                                <th>存期</th>
-                                <th>利率</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>账户一</td>
-                                <td>人民币</td>
-                                <td>0.00</td>
-                                <td>2018-5-28</td>
-                                <td>5年</td>
-                                <td>0.01</td>
-                            </tr>
-                            </tbody>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>账户账号</th>
+                                    <th>存入时间</th>
+                                    <th>币种</th>
+                                    <th>余额</th>
+                                    <th>利率</th>
+                                    <th>类型</th>
+                                    <th>存期</th>
+                                    <th>利息余额</th>
+                                    <th>是否续存</th>
+                                    <th>可用</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="s : ${savings}">
+                                    <td th:text="${s.id}"></td>
+                                    <td th:text="${#dates.format(s.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td th:text="${s.mType}"></td>
+                                    <td th:text="${s.money}"></td>
+                                    <td th:text="${s.v}"></td>
+                                    <td th:text="${s.type}"></td>
+                                    <td th:text="${s.year}"></td>
+                                    <td th:text="${s.left}"></td>
+                                    <td th:text="${s.flag}"></td>
+                                    <td th:text="${s.enable}"></td>
+                                </tr>
+                                </tbody>
 
-                        </table>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card-body -->
+                    <!-- /.card -->
                 </div>
-                <!-- /.card -->
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
-        </div>
 
             <div class="row">
                 <div class="col-md-12">
@@ -199,13 +212,23 @@
                             </div>
                         </div>
                         <div class="card-body">
+
+                            <div th:if="${sss}" class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                                <p th:text="${sss}"></p>
+                            </div>
+
+
                             <div>
-                                <form class="form-group">
+                                <form class="form-group" action="/bank" method="get">
                                     <label>时间范围</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="fa fa-calendar"></i></span></div>
                                         <input type="text" name="range" class="form-control float-right"
+                                               required="required"
                                                id="reservation">
                                         <button type="submit" class="btn btn-success" style="margin: 0 10px;">查询
                                         </button>
@@ -214,24 +237,24 @@
                                 <table id="table2" style="margin-top: 20px" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th>账户ID</th>
-                                        <th>账户名称</th>
+                                        <th>交易流水号</th>
+                                        <th>储蓄账户账号</th>
                                         <th>币种</th>
-                                        <th>余额</th>
-                                        <th>起息日</th>
-                                        <th>存期</th>
-                                        <th>利率</th>
+                                        <th>交易前余额</th>
+                                        <th>交易后余额</th>
+                                        <th>交易时间</th>
+                                        <th>交易类型</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>账户一</td>
-                                        <td>人民币</td>
-                                        <td>0.00</td>
-                                        <td>2018-5-28</td>
-                                        <td>5年</td>
-                                        <td>0.01</td>
+                                    <tr th:each="r : ${records}">
+                                        <td th:text="${r.id}"></td>
+                                        <td th:text="${r.s.id}"></td>
+                                        <td th:text="${r.moneyType}"></td>
+                                        <td th:text="${r.moneyStart}"></td>
+                                        <td th:text="${r.moneyEnd}"></td>
+                                        <td th:text="${#dates.format(r.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                        <td th:text="${r.type}"></td>
                                     </tr>
                                     </tbody>
 
@@ -318,14 +341,14 @@
 <script src="/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 
-<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/table.min.js"></script>
 <script src="/js/dataTables.bootstrap4.min.js"></script>
 <script src="/js/jquery.slimscroll.min.js"></script>
-<script src="/js/demo.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
 <script src="/js/daterangepicker.js"></script>
 <script src="/js/jquery.flot.min.js"></script>
 <script src="/js/jquery.flot.pie.min.js"></script>
+<script src="/js/demo.js"></script>
 <script>
     $(function () {
         $('#table').DataTable({
@@ -348,8 +371,12 @@
 </script>
 <script>
     $(function () {
-
-        $('#reservation').daterangepicker()
+        $('#reservation').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            timePickerSeconds: true,
+            format: 'YYYY-MM-DD h:mm:ss A'
+        })
         //Date range picker with time picker
     })
 </script>
@@ -362,117 +389,78 @@
          */
         //LINE randomly generated data
 
-        var sin = [],
-            cos = [];
-        for (var i = 0; i < 14; i += 0.5) {
-            sin.push([i, Math.sin(i)]);
-            cos.push([i, Math.cos(i)])
-        }
-        var line_data1 = {
-            data: sin,
-            color: '#3c8dbc'
-        };
-        var line_data2 = {
-            data: cos,
-            color: '#00c0ef'
-        };
-        $.plot('#line-chart', [line_data1, line_data2], {
-            grid: {
-                hoverable: true,
-                borderColor: '#f3f3f3',
-                borderWidth: 1,
-                tickColor: '#f3f3f3'
-            },
-            series: {
-                shadowSize: 0,
-                lines: {
-                    show: true
-                },
-                points: {
-                    show: true
+        $.ajax({
+            type: "GET",
+            url: "/bank/data",
+            dataType: "json",
+            success: function (data) {
+                var label = data['label'];
+                var res = [];
+                for (var i = 0; i < label.length; i++) {
+                    res[i] = {
+                        data: data['res'][i],
+                        label: label[i]
+                    };
                 }
-            },
-            lines: {
-                fill: false,
-                color: ['#3c8dbc', '#f56954']
-            },
-            yaxis: {
-                show: true
-            },
-            xaxis: {
-                show: true
-            }
-        });
-        //Initialize tooltip on hover
-        $('<div class="tooltip-inner" id="line-chart-tooltip"></div>').css({
-            position: 'absolute',
-            display: 'none',
-            opacity: 0.8
-        }).appendTo('body');
-        $('#line-chart').bind('plothover', function (event, pos, item) {
-
-            if (item) {
-                var x = item.datapoint[0].toFixed(2),
-                    y = item.datapoint[1].toFixed(2);
-
-                $('#line-chart-tooltip').html(item.series.label + ' of ' + x + ' = ' + y)
-                    .css({
-                        top: item.pageY + 5,
-                        leftMoney: item.pageX + 5
-                    })
-                    .fadeIn(200)
-            } else {
-                $('#line-chart-tooltip').hide()
-            }
-
-        });
-
-        /*
-         * DONUT CHART
-         * -----------
-         */
-
-        var donutData = [
-            {
-                label: 'Series2',
-                data: 30,
-                color: '#bc0000'
-            },
-            {
-                label: 'Series3',
-                data: 20,
-                color: '#0000b7'
-            },
-            {
-                label: 'Series4',
-                data: 50,
-                color: '#00ef00'
-            }
-        ];
-        $.plot('#donut-chart', donutData, {
-            series: {
-                pie: {
-                    show: true,
-                    radius: 1,
-                    innerRadius: 0.5,
-                    label: {
-                        show: true,
-                        radius: 2 / 3,
-                        formatter: labelFormatter,
-                        threshold: 0.1
+                $.plot('#line-chart', res, {
+                    grid: {
+                        hoverable: true,
+                        borderColor: '#f3f3f3',
+                        borderWidth: 1,
+                        tickColor: '#f3f3f3'
+                    },
+                    series: {
+                        shadowSize: 0,
+                        lines: {
+                            show: true
+                        },
+                        points: {
+                            show: true
+                        }
+                    },
+                    lines: {
+                        fill: false,
+                        color: ['#3c8dbc', '#f56954']
+                    },
+                    yaxis: {
+                        show: true
+                    },
+                    xaxis: {
+                        show: true
                     }
+                });
 
+                var donutData=[];
+                for (i = 0; i < label.length; i++) {
+                    donutData[i] = {
+                        data:data['donut'][i],
+                        label: label[i]
+                    };
                 }
-            },
-            legend: {
-                show: false
-            }
-        })
-        /*
-         * END DONUT CHART
-         */
+                $.plot('#donut-chart', donutData, {
+                    series: {
+                        pie: {
+                            show: true,
+                            radius: 1,
+                            innerRadius: 0.5,
+                            label: {
+                                show: true,
+                                radius: 2 / 3,
+                                formatter: labelFormatter,
+                                threshold: 0.1
+                            }
 
-    })
+                        }
+                    },
+                    legend: {
+                        show: false
+                    }
+                })
+            }
+        });
+
+
+    });
 
     /*
      * Custom Label formatter

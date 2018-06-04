@@ -1,6 +1,6 @@
 package com.jlu.chengjie.model;
 
-/**
+/*
  * 个人博客:http://www.chengjie-jlu.com
  * Github:https://github.com/Easoncheng0405
  * 作者 程杰
@@ -28,22 +28,16 @@ public class Constant {
      */
     public final static long ID = 1000000000L;
 
-    /**
-     * 人民币活期起始储蓄子账户账号
-     */
-    public final static int RMB_ONE = 11000;
 
+    public final static int ONE_ID = 1000;
+    public final static int TWO_ID = 2000;
+    public final static int THREE_ID = 3000;
 
-    /**
-     * 人民币整存整取起始储蓄子账户账号
-     */
-    public final static int RMB_TWO = 12000;
-
-
-    /**
-     * 人民币定活两便起始储蓄子账户账号
-     */
-    public final static int RMB_THREE = 13000;
+    public final static int RMB_ID = 10000;
+    public final static int MY_ID = 20000;
+    public final static int GB_ID = 30000;
+    public final static int RY_ID = 40000;
+    public final static int OY_ID = 50000;
 
     /**
      * 账户正常
@@ -104,7 +98,33 @@ public class Constant {
     /**
      * 用一分钟代替一年
      */
-    public final static long RANGE =5000L;
+    public final static long RANGE = 60000L;
+
+
+    /*
+     *  各类币种
+     */
+
+    public static final String RMB = "人民币";
+    public static final String MY = "美元";
+    public static final String GB = "港币";
+    public static final String RY = "日元";
+    public static final String OY = "欧元";
+
+
+    /*
+     * 交易类型
+     */
+
+    public static final String SAVE = "存款";
+
+    public static final String GET = "取款";
+
+    public static final String AUTO = "自动计息";
+
+    public static final String CONTINUE="续存";
+
+    public static final String CHANGE="转存";
 
 
 }

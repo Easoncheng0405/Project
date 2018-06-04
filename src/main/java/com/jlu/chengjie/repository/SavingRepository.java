@@ -16,9 +16,13 @@ import java.util.List;
 @Repository
 public interface SavingRepository extends JpaRepository<Savings, Long> {
 
-    List<Savings> findByType(String type);
+    List<Savings> findByTypeAndEnable(String type,boolean enable);
 
     Savings findRecordById(long id);
 
-    List<Savings> findByYear(int year);
+    List<Savings> findByYearAndEnable(int year,boolean enable);
+
+
+    List<Savings> findByTypeAndMoneyType(String type,String moneyType);
+
 }

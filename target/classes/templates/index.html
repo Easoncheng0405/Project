@@ -118,7 +118,7 @@
 
             <div th:if="${message}" class="alert alert-dark alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                <h5><i class="icon fa fa-check"></i> 提示</h5>
                 <p th:text="${message}"></p>
             </div>
 
@@ -185,9 +185,17 @@
                             </div>
                             <form class="form-group" action="/save" method="post">
 
+                                <label >选择币种</label>
+                                <select class="form-control" name="mType">
+                                    <option>人民币</option>
+                                    <option>美元</option>
+                                    <option>港币</option>
+                                    <option>日元</option>
+                                    <option>欧元</option>
+                                </select>
+
                                 <label for="select">选择一种储蓄类型</label>
                                 <select id="select" class="form-control" name="type">
-
                                     <option th:each="type:${types}" th:text="${type}"></option>
                                 </select>
 

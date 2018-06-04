@@ -2,8 +2,11 @@ package com.jlu.chengjie.controller;
 
 import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.Constant;
+import com.jlu.chengjie.model.Record;
 import com.jlu.chengjie.model.Savings;
+import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
+import com.jlu.chengjie.util.IDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +36,12 @@ public class SavingController {
 
     private final SavingRepository savingRepository;
 
+    private final RecordRepository recordRepository;
+
     @Autowired
-    public SavingController(SavingRepository savingRepository) {
+    public SavingController(SavingRepository savingRepository, RecordRepository recordRepository) {
         this.savingRepository = savingRepository;
+        this.recordRepository = recordRepository;
     }
 
 
@@ -57,10 +63,14 @@ public class SavingController {
 
         //自选项选项
         for (Savings saving : savings)
-            options.add(saving.getId() + ":" + saving.getMoney() + "元/" + dateFormat.format(saving.getDate()) + "存入");
+            if (saving.isEnable())
+                options.add(saving.getId() + ":" + saving.getMoney() + "元/" + dateFormat.format(saving.getDate()) + "存入");
         model.addAttribute("options", options);
 
 
+        /*
+         * 六种储蓄选项
+         */
         List<String> types = new ArrayList<>();
 
         types.add(Constant.SAVE_ONE);
@@ -83,8 +93,8 @@ public class SavingController {
      * @return 重定向页面
      */
     @PostMapping("/save")
-    public String newAccount(@RequestParam String type, @RequestParam String money, @RequestParam String password,
-                             HttpSession session, final RedirectAttributes redirectAttributes) {
+    public String newAccount(@RequestParam String mType, @RequestParam String type, @RequestParam String money,
+                             @RequestParam String password, HttpSession session, final RedirectAttributes redirectAttributes) {
 
         Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
 
@@ -106,7 +116,6 @@ public class SavingController {
                     redirectAttributes.addFlashAttribute(Constant.MESSAGE, "最低存入1元！");
                     return "redirect:/";
                 }
-                savings.setId(Constant.RMB_ONE + savingRepository.findByType(Constant.SAVE_ONE).size());
                 savings.setV(Constant.V_ONE);
                 savings.setType(Constant.SAVE_ONE);
                 break;
@@ -118,7 +127,6 @@ public class SavingController {
                 }
                 savings.setType(Constant.SAVE_TWO);
                 savings.setV(Constant.V_TWO);
-                savings.setId(Constant.RMB_TWO + savingRepository.findByType(Constant.SAVE_TWO).size());
                 savings.setYear(1);
             }
             break;
@@ -129,7 +137,6 @@ public class SavingController {
                 }
                 savings.setType(Constant.SAVE_TWO);
                 savings.setV(Constant.V_TWO);
-                savings.setId(Constant.RMB_TWO + savingRepository.findByType(Constant.SAVE_TWO).size());
                 savings.setYear(2);
             }
             break;
@@ -140,7 +147,6 @@ public class SavingController {
                 }
                 savings.setType(Constant.SAVE_TWO);
                 savings.setV(Constant.V_TWO);
-                savings.setId(Constant.RMB_TWO + savingRepository.findByType(Constant.SAVE_TWO).size());
                 savings.setYear(5);
             }
             break;
@@ -151,7 +157,6 @@ public class SavingController {
                 }
                 savings.setType(Constant.SAVE_TWO);
                 savings.setV(Constant.V_TWO);
-                savings.setId(Constant.RMB_TWO + savingRepository.findByType(Constant.SAVE_TWO).size());
                 savings.setYear(6);
             }
             break;
@@ -160,7 +165,6 @@ public class SavingController {
                     redirectAttributes.addFlashAttribute(Constant.MESSAGE, "最低存入50元！");
                     return "redirect:/";
                 }
-                savings.setId(Constant.RMB_THREE + savingRepository.findByType(Constant.SAVE_THREE).size());
                 savings.setV(Constant.V_TWO);
                 savings.setType(Constant.SAVE_THREE);
                 break;
@@ -168,12 +172,31 @@ public class SavingController {
             default:
                 break;
         }
+
+        //交易记录
+        Record record = new Record();
+        record.setType(Constant.SAVE);
+        record.setDate(new Date());
+        record.setMoneyStart(new BigDecimal(0));
+        record.setMoneyEnd(new BigDecimal(money));
+        record.setMoneyType(mType);
+
+
+        //存入数据库
+        savings.setId(IDUtil.getId(savingRepository, type.substring(0, 4), mType));
         savings.setAccount(account);
         savings.setDate(new Date());
         savings.setMoney(new BigDecimal(money));
         savings.setLeftMoney(new BigDecimal(0));
         savings.setFlag(true);
-        savingRepository.save(savings);
+        savings.setEnable(true);
+        savings.setMoneyType(mType);
+
+        //这里设置所属储蓄账户
+        record.setS(savingRepository.save(savings));
+        recordRepository.save(record);
+
+
         redirectAttributes.addFlashAttribute(Constant.MESSAGE, "成功存入账户: " + account.getName() + " " + money + " 元");
         return "redirect:/";
     }
@@ -205,13 +228,19 @@ public class SavingController {
             return "redirect:/";
         }
 
-
+        Record record = new Record();
+        record.setDate(new Date());
+        record.setType(Constant.GET);
+        record.setMoneyType(savings.getMoneyType());
+        record.setMoneyStart(savings.getMoney());
         switch (savings.getType()) {
             case Constant.SAVE_ONE: {
                 //全部取出
                 if (decimal.compareTo(savings.getMoney()) == 0) {
-                    //删除此储蓄子账户
-                    savingRepository.delete(savings);
+                    //此储蓄子账户不可用
+                    savings.setMoney(new BigDecimal(0));
+                    savings.setEnable(false);
+                    record.setS(savingRepository.save(savings));
 
                     //计算一年利息
                     BigDecimal res = decimal.multiply(savings.getV());
@@ -242,8 +271,10 @@ public class SavingController {
                     //保存记录
                     savings.setMoney(savings.getMoney().subtract(decimal));
                     savings.setLeftMoney(savings.getLeftMoney().add(left));
-                    savingRepository.save(savings);
+                    record.setS(savingRepository.save(savings));
                 }
+
+                record.setMoneyEnd(savings.getMoney());
                 break;
             }
 
@@ -274,15 +305,17 @@ public class SavingController {
                         + (decimal.add(res)) + "元  本金: "
                         + decimal + " 元  利息: " + res);
                 //全部取出删除此储蓄账户
-                if (savings.getMoney().compareTo(decimal) == 0)
-                    savingRepository.delete(savings);
-                else {
+                if (savings.getMoney().compareTo(decimal) == 0) {
+                    savings.setMoney(new BigDecimal(0));
+                    savings.setEnable(false);
+                    record.setS(savingRepository.save(savings));
+                } else {
                     savings.setMoney(savings.getMoney().subtract(decimal));
                     //无法再取款
                     savings.setFlag(false);
-                    savingRepository.save(savings);
+                    record.setS(savingRepository.save(savings));
                 }
-
+                record.setMoneyEnd(savings.getMoney());
                 break;
             }
 
@@ -308,13 +341,16 @@ public class SavingController {
                                 + (decimal.add(res)) + "元  本金: "
                                 + decimal + " 元  利息: " + res);
                     }
-
-                    savingRepository.delete(savings);
+                    savings.setMoney(new BigDecimal(0));
+                    savings.setEnable(false);
+                    record.setS(savingRepository.save(savings));
                 }
+                record.setMoneyEnd(savings.getMoney());
                 break;
             }
         }
 
+        recordRepository.save(record);
         return "redirect:/";
     }
 

@@ -56,6 +56,10 @@ public class Savings {
      */
     private String type;
 
+    /**
+     * 币种
+     */
+    private String moneyType;
 
     /**
      * 用于标记整存整取是否已取过款
@@ -63,6 +67,12 @@ public class Savings {
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private boolean flag;
 
+
+    /**
+     * 用于标记是否可用
+     */
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private boolean enable;
 
     /**
      * 1 : 1年不续存
@@ -128,6 +138,14 @@ public class Savings {
         this.type = type;
     }
 
+    public String getMoneyType() {
+        return moneyType;
+    }
+
+    public void setMoneyType(String moneyType) {
+        this.moneyType = moneyType;
+    }
+
     public boolean isFlag() {
         return flag;
     }
@@ -142,6 +160,14 @@ public class Savings {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public Account getAccount() {

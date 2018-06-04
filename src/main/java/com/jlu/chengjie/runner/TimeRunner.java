@@ -1,8 +1,11 @@
 package com.jlu.chengjie.runner;
 
 import com.jlu.chengjie.model.Constant;
+import com.jlu.chengjie.model.Record;
 import com.jlu.chengjie.model.Savings;
+import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
+import com.jlu.chengjie.util.IDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -33,9 +36,12 @@ public class TimeRunner {
 
     private final SavingRepository savingRepository;
 
+    private final RecordRepository recordRepository;
+
     @Autowired
-    public TimeRunner(SavingRepository savingRepository) {
+    public TimeRunner(SavingRepository savingRepository, RecordRepository recordRepository) {
         this.savingRepository = savingRepository;
+        this.recordRepository = recordRepository;
     }
 
     /**
@@ -44,22 +50,37 @@ public class TimeRunner {
     @Scheduled(fixedRate = Constant.RANGE)
     public void run1() {
 
-        System.out.println("run1");
 
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByType(Constant.SAVE_ONE);
+        List<Savings> savings = savingRepository.findByTypeAndEnable(Constant.SAVE_ONE, true);
 
         //利滚利
         for (Savings s : savings) {
 
+            //如果此储蓄账户不可用，直接跳过
+            if (!s.isEnable())
+                continue;
+
+            //交易记录
+            Record record = new Record();
+            record.setDate(new Date());
+            record.setMoneyStart(s.getMoney());
+            record.setMoneyType(s.getMoneyType());
+            record.setType(Constant.AUTO);
             //存够一年
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE)
                 s.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_ONE)));
+                //未存够一年
             else
                 s.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_ONE).multiply(new
                         BigDecimal((double) range / (double) Constant.RANGE))).setScale(2, BigDecimal.ROUND_DOWN));
-            savingRepository.save(s);
+
+            record.setMoneyEnd(s.getMoney());
+
+            //存到数据库
+            record.setS(savingRepository.save(s));
+            recordRepository.save(record);
         }
     }
 
@@ -70,12 +91,22 @@ public class TimeRunner {
     @Scheduled(fixedRate = Constant.RANGE)
     public void run2() {
 
-        System.out.println("run2");
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByType(Constant.SAVE_THREE);
+        List<Savings> savings = savingRepository.findByTypeAndEnable(Constant.SAVE_ONE, true);
 
         //利滚利
         for (Savings s : savings) {
+
+            //如果此储蓄账户不可用，直接跳过
+            if (!s.isEnable())
+                continue;
+
+            //交易记录
+            Record record = new Record();
+            record.setDate(new Date());
+            record.setMoneyStart(s.getMoney());
+            record.setMoneyType(s.getMoneyType());
+            record.setType(Constant.AUTO);
 
             //存够一年
             long range = new Date().getTime() - s.getDate().getTime();
@@ -84,7 +115,13 @@ public class TimeRunner {
             else
                 s.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_TWO).multiply(new
                         BigDecimal((double) range / (double) Constant.RANGE))).setScale(2, BigDecimal.ROUND_DOWN));
-            savingRepository.save(s);
+
+
+            record.setMoneyEnd(s.getMoney());
+
+            //存到数据库
+            record.setS(savingRepository.save(s));
+            recordRepository.save(record);
         }
     }
 
@@ -94,35 +131,59 @@ public class TimeRunner {
      */
     @Scheduled(fixedRate = Constant.RANGE)
     public void run3() {
-        System.out.println("run3");
 
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByYear(1);
+        List<Savings> savings = savingRepository.findByYearAndEnable(1, true);
 
         //利滚利
         for (Savings s : savings) {
+
+            //如果此储蓄账户不可用，直接跳过
+            if (!s.isEnable())
+                continue;
+
+            //交易记录
+            Record record = new Record();
+            record.setDate(new Date());
+            record.setMoneyStart(s.getMoney());
+            record.setMoneyType(s.getMoneyType());
+
+
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE) {
                 //新的活期
                 Savings one = new Savings();
 
-                one.setId(savingRepository.findAll().size() + Constant.RMB_ONE);
+                one.setId(IDUtil.getId(savingRepository, s.getType(), s.getMoneyType()));
                 one.setV(Constant.V_ONE);
                 one.setType(Constant.SAVE_ONE);
                 one.setAccount(s.getAccount());
                 one.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_TWO)));
                 one.setDate(new Date());
                 one.setLeftMoney(new BigDecimal(0));
+                one.setMoneyType(s.getMoneyType());
+                one.setEnable(true);
                 //保存新的活期
                 savingRepository.save(one);
-                //删除旧的定期
-                savingRepository.delete(s);
+                //旧的定期不可用
+                s.setEnable(false);
+
+                record.setMoneyEnd(s.getMoney());
+                record.setType(Constant.AUTO);
+                //存到数据库
+                record.setS(savingRepository.save(s));
+                recordRepository.save(record);
             }
             //走过一个完整的计息时段
             else {
                 s.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_TWO).multiply(new
                         BigDecimal((double) range / (double) Constant.RANGE))).setScale(2, BigDecimal.ROUND_DOWN));
-                savingRepository.save(s);
+
+                record.setMoneyEnd(s.getMoney());
+                record.setType(Constant.CHANGE);
+                //存到数据库
+                record.setS(savingRepository.save(s));
+                recordRepository.save(record);
             }
 
         }
@@ -134,34 +195,63 @@ public class TimeRunner {
      */
     @Scheduled(fixedRate = Constant.RANGE * 5)
     public void run4() {
-        System.out.println("run4");
+
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByYear(5);
+        List<Savings> savings = savingRepository.findByYearAndEnable(5, true);
 
         //利滚利
         for (Savings s : savings) {
+
+            //如果此储蓄账户不可用，直接跳过
+            if (!s.isEnable())
+                continue;
+
+            //交易记录
+            Record record = new Record();
+            record.setDate(new Date());
+            record.setMoneyStart(s.getMoney());
+            record.setMoneyType(s.getMoneyType());
+
+
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE * 5) {
                 //新的活期
                 Savings one = new Savings();
 
-                one.setId(savingRepository.findAll().size() + Constant.RMB_ONE);
+                one.setId(IDUtil.getId(savingRepository, s.getType(), s.getMoneyType()));
                 one.setV(Constant.V_ONE);
                 one.setType(Constant.SAVE_ONE);
                 one.setAccount(s.getAccount());
                 one.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_TWO).multiply(new BigDecimal("5"))));
                 one.setDate(new Date());
                 one.setLeftMoney(new BigDecimal(0));
+                one.setMoneyType(s.getMoneyType());
+                one.setEnable(true);
                 //保存新的活期
                 savingRepository.save(one);
-                //删除旧的定期
-                savingRepository.delete(s);
-            } else {
+                //旧的定期不可用
+                s.setEnable(false);
+
+                record.setMoneyEnd(s.getMoney());
+                record.setType(Constant.AUTO);
+                //存到数据库
+                record.setS(savingRepository.save(s));
+                recordRepository.save(record);
+
+            }
+
+            //必须存够一个完整的计息段才会转存
+            else {
                 s.setMoney(s.getMoney().add(s.getMoney().multiply(Constant.V_TWO).
                         multiply(new BigDecimal((double) range / (double) Constant.RANGE)))
                         .setScale(2, BigDecimal.ROUND_DOWN));
 
-                savingRepository.save(s);
+                record.setType(Constant.CHANGE);
+                record.setMoneyEnd(s.getMoney());
+
+                //存到数据库
+                record.setS(savingRepository.save(s));
+                recordRepository.save(record);
             }
 
 
@@ -175,10 +265,21 @@ public class TimeRunner {
      */
     @Scheduled(fixedRate = Constant.RANGE)
     public void run5() {
-        System.out.println("run5");
+
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByYear(2);
+        List<Savings> savings = savingRepository.findByYearAndEnable(2, true);
         for (Savings s : savings) {
+
+            //如果此储蓄账户不可用，直接跳过
+            if (!s.isEnable())
+                continue;
+
+            //交易记录
+            Record record = new Record();
+            record.setDate(new Date());
+            record.setMoneyStart(s.getMoney());
+            record.setMoneyType(s.getMoneyType());
+            record.setType(Constant.CONTINUE);
 
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE)
@@ -189,7 +290,11 @@ public class TimeRunner {
             //再次可取款
             s.setFlag(true);
 
-            savingRepository.save(s);
+            record.setMoneyEnd(s.getMoney());
+
+            //存到数据库
+            record.setS(savingRepository.save(s));
+            recordRepository.save(record);
         }
     }
 
@@ -199,10 +304,21 @@ public class TimeRunner {
      */
     @Scheduled(fixedRate = Constant.RANGE * 5)
     public void run6() {
-        System.out.println("run6");
+
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByYear(6);
+        List<Savings> savings = savingRepository.findByYearAndEnable(6, true);
         for (Savings s : savings) {
+
+            //如果此储蓄账户不可用，直接跳过
+            if (!s.isEnable())
+                continue;
+
+            //交易记录
+            Record record = new Record();
+            record.setDate(new Date());
+            record.setMoneyStart(s.getMoney());
+            record.setMoneyType(s.getMoneyType());
+            record.setType(Constant.CONTINUE);
 
             long range = new Date().getTime() - s.getDate().getTime();
             if (range > Constant.RANGE)
@@ -214,8 +330,11 @@ public class TimeRunner {
             //再次可取款
             s.setFlag(true);
 
-            savingRepository.save(s);
+            record.setMoneyEnd(s.getMoney());
+
+            //存到数据库
+            record.setS(savingRepository.save(s));
+            recordRepository.save(record);
         }
     }
-
 }

@@ -19,6 +19,12 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
+
+<style>
+    label {
+        margin-top: 5px;
+    }
+</style>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
@@ -101,15 +107,44 @@
                 <a href="/" class="nav-link">银行管理系统</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">修改密码</a>
+                <a href="#" data-toggle="modal" data-target="#myModal" class="nav-link">开通信用卡</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">转账</a>
+                <a href="#" class="nav-link">转账</a>
+            </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">挂失</a>
             </li>
         </ul>
     </nav>
     <!-- /.navbar -->
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">开通信用卡</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <form class="form-group" action="/bank/card" method="post">
+                    <div class="modal-body">
 
+                        <label>信用卡账号</label>
+                        <input placeholder="2开头的10位数字" type="number" name="id" min="2000000000"
+                               max="2999999999" class="form-control" required="required">
+                        <label>设定密码</label>
+                        <input type="password" name="password" class="form-control" required="required">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交更改</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -122,6 +157,12 @@
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h5><i class="icon fa fa-info"></i> 错误</h5>
                     <p th:text="${message}"></p>
+                </div>
+
+                <div th:if="${success}" class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fa fa-check"></i> 恭喜</h5>
+                    <p th:text="${success}"></p>
                 </div>
 
                 <div class="row mb-2">
@@ -354,7 +395,7 @@
         $('#table').DataTable({
             "paging": true,
             "lengthChange": true,
-            "searching": false,
+            "searching": true,
             "ordering": true,
             "info": true,
             "autoWidth": false
@@ -362,7 +403,7 @@
         $('#table2').DataTable({
             "paging": true,
             "lengthChange": true,
-            "searching": false,
+            "searching": true,
             "ordering": true,
             "info": true,
             "autoWidth": false
@@ -374,7 +415,7 @@
         $('#reservation').daterangepicker({
             timePicker: true,
             timePickerIncrement: 1,
-            timePickerSeconds:true,
+            timePickerSeconds: true,
             timePicker12Hour: false, //24小时 老版本
             timePicker24Hour: true, //24小时 新版本
             locale: {
@@ -442,10 +483,10 @@
                     }
                 });
 
-                var donutData=[];
+                var donutData = [];
                 for (i = 0; i < label.length; i++) {
                     donutData[i] = {
-                        data:data['donut'][i],
+                        data: data['donut'][i],
                         label: label[i]
                     };
                 }

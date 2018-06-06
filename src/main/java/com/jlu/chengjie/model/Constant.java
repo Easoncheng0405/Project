@@ -51,6 +51,9 @@ public class Constant {
     public final static String ACCOUNT_FREEZE = "冻结";
 
 
+
+
+
     /**
      * 活期储蓄
      */
@@ -85,9 +88,15 @@ public class Constant {
 
 
     /**
-     *
+     * 定期利率
      */
     public static BigDecimal V_TWO = new BigDecimal("0.03");
+
+
+    /**
+     * 信用卡利率
+     */
+    public static BigDecimal V_CARD=new BigDecimal("0.05");
 
     /**
      * 消息
@@ -122,9 +131,19 @@ public class Constant {
 
     public static final String AUTO = "自动计息";
 
-    public static final String CONTINUE="续存";
+    public static final String CONTINUE = "续存";
 
-    public static final String CHANGE="转存";
+    public static final String CHANGE = "转存";
 
+
+    /**
+     * 信用卡初始额度
+     */
+    public static final BigDecimal CARD = new BigDecimal("10000");
+
+    /**
+     * 千分之三的手续费
+     */
+    public static final BigDecimal TEMP=new BigDecimal("0.003");
 
 }

@@ -1,9 +1,7 @@
 package com.jlu.chengjie.runner;
 
-import com.jlu.chengjie.model.Account;
-import com.jlu.chengjie.model.Constant;
-import com.jlu.chengjie.model.Record;
-import com.jlu.chengjie.model.Savings;
+import com.jlu.chengjie.model.*;
+import com.jlu.chengjie.repository.CardRepository;
 import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
 import com.jlu.chengjie.util.IDUtil;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -41,10 +38,14 @@ public class TimeRunner {
     private final RecordRepository recordRepository;
 
 
+    private final CardRepository cardRepository;
+
     @Autowired
-    public TimeRunner(SavingRepository savingRepository, RecordRepository recordRepository, HttpSession session) {
+    public TimeRunner(SavingRepository savingRepository, RecordRepository recordRepository
+            , CardRepository cardRepository) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
+        this.cardRepository = cardRepository;
     }
 
     /**
@@ -354,4 +355,57 @@ public class TimeRunner {
             System.out.println(6);
         }
     }
+
+    /**
+     * 每过10s清查一次信用卡
+     */
+    @Scheduled(fixedRate = Constant.RANGE)
+    public void run7() {
+
+
+        //先找信用卡
+        List<Card> cards = cardRepository.findAll();
+
+        //获取现在的时间
+        Date date = new Date();
+
+        for (Card c : cards) {
+
+            //没欠钱已注销，跳过
+            if (c.getBorrow().compareTo(new BigDecimal(0)) < 1||c.getType().equals("已注销"))
+                continue;
+
+            //无论卡还款或没还款都要对当前的欠款进行计息
+            //下月20才开始清算，不到时间的跳过
+            if (date.getTime() - c.getDate().getTime() > Constant.RANGE) {
+
+
+                //先计息
+                c.setV(c.getBorrow().multiply(Constant.V_CARD));
+
+                //处理是否达到最低还款
+                if (c.getTag() == 1) {
+
+                    //违规月数加1
+                    c.setCindex(c.getCindex() + 1);
+
+                    //计入百分之五的滞纳金
+                    c.setClate(c.getClast().multiply(new BigDecimal("0.05")));
+                    if (c.getCindex() == 3)
+                        c.setType("冻结");//冻结次卡
+                    if (c.getCindex() == 4)
+                        c.setType("已注销"); //销毁此卡
+                }
+
+
+                //经过这个月后所有还有欠款的信用卡再次标记为待还款
+                if (c.getBorrow().compareTo(new BigDecimal(0)) > 0)
+                    c.setTag(1);
+                cardRepository.save(c);
+            }
+
+
+        }
+    }
+
 }

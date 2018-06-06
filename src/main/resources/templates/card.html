@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,6 +17,12 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
+
+<style>
+    label {
+        margin-top: 5px;
+    }
+</style>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
@@ -128,6 +134,19 @@
 
         <!-- Main content -->
         <section class="content">
+
+            <div th:if="${message}" class="alert alert-dark alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                <p th:text="${message}"></p>
+            </div>
+
+            <div th:if="${msg}" class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                <p th:text="${msg}"></p>
+            </div>
+
             <div class="row">
                 <div class="col-lg-4">
                     <div class="card card-success">
@@ -145,26 +164,26 @@
                         </div>
                         <div class="card-body" style="height: 800px;">
 
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                没有这张卡或输入金额有误超出了限制!
-                            </div>
-
                             <h4 style="margin:50px 20px;">信用卡可以在特约商户刷卡消费，并可享受最短 20 天，最长 50 天的免息还款期。免息还款期是指从银行记账日
                                 至到期还款日之间的日期。信用卡的到期还款日为下月 20 日。刷卡消费无需密码。</h4>
 
-                            <form class="form-group">
+                            <form class="form-group" action="/card/one" method="post">
 
-                                <label for="id">消费商户名称</label>
-                                <input class="form-control" id="id" type="text">
+                                <label>消费商户名称</label>
+                                <select class="form-control" name="name">
+                                    <option>耐克</option>
+                                    <option>阿迪</option>
+                                    <option>李宁</option>
+                                    <option>特步</option>
+                                </select>
 
-                                <label for="card">信用卡卡号</label>
-                                <input class="form-control" id="card" type="number">
+                                <label>信用卡卡号</label>
+                                <select class="form-control" name="id">
+                                    <option th:each="id:${ids}" th:text="${id}"></option>
+                                </select>
 
-                                <label for="money">金额</label>
-                                <input class="form-control" id="money" type="number">
+                                <label>金额</label>
+                                <input class="form-control" type="number" name="money" required="required">
 
                                 <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
                                 </button>
@@ -192,22 +211,22 @@
                             </div>
                         </div>
                         <div class="card-body" style="height: 800px;">
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                没有这张卡或输入金额有误超出了限制!
-                            </div>
                             <h4 style="margin:50px 20px;">信用卡可以在 ATM 上预借现金。预借现金不享受免息还款期待遇，按日息万分之五收费至清偿日止。预借现金
                                 额度为信用额度的 70%。每笔预借现金按照所借现金额的千分之三收取手续费，四舍五入到分，最低 1 元。预
                                 借现金的密码可通过网上银行修改。</h4>
-                            <form class="form-group">
+                            <form class="form-group" action="/card/two" method="post">
 
-                                <label for="id1">卡号</label>
-                                <input class="form-control" id="id1" type="number">
+                                <label>信用卡卡号</label>
+                                <select class="form-control" name="id">
+                                    <option th:each="id:${ids}" th:text="${id}"></option>
+                                </select>
 
-                                <label for="money1">借款金额</label>
-                                <input class="form-control" id="money1" type="number">
+                                <label>金额</label>
+                                <input class="form-control" type="number" name="money" required="required">
+
+
+                                <label>密码</label>
+                                <input class="form-control" type="password" name="password" required="required">
 
                                 <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
                                 </button>
@@ -235,25 +254,24 @@
                         </div>
                         <div class="card-body" style="height: 800px;">
 
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                                </button>
-                                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
-                                没有这张卡或输入金额有误!
-                            </div>
-
                             <h4 style="margin:50px 20px;">
                                 客户在还款日之前应还清所有款项，也可以选择以最低还款额方式还款。选择最低还款额还款方式不享受免息还
                                 款期待遇，按日息万分之五收取利息，并按月计收复利。
+                                最低还款额=刷卡消费额×10%+预借现金额×10%+前期所有最低还款额未还部分+预借现金手续费+利息+滞
+                                纳金。
+                                客户未能达到最低还款额，除计收利息之外，还将收取最低还款额未还部分百分之五的滞纳金。60 天未达到最低
+                                还款额则冻结信用卡的使用。90 天未达到最低还款额则将被自动销卡。
                             </h4>
 
-                            <form class="form-group">
+                            <form class="form-group" action="/card/three" method="post">
 
-                                <label for="id2">信用卡卡号</label>
-                                <input class="form-control" id="id2" type="number">
+                                <label>信用卡卡号</label>
+                                <select class="form-control" name="id">
+                                    <option th:each="id:${ids}" th:text="${id}"></option>
+                                </select>
 
-                                <label for="money2">还款金额</label>
-                                <input class="form-control" id="money2" type="number">
+                                <label>金额</label>
+                                <input class="form-control" type="number" name="money" required="required">
 
                                 <button class="btn btn-block btn-primary" type="submit" style="margin-top: 20px;"> 提交
                                 </button>
@@ -339,19 +357,27 @@
                                     <th>总额度</th>
                                     <th>可用额度</th>
                                     <th>本月待还</th>
-                                    <th>信用卡状态</th>
+                                    <th>本月最低还款</th>
                                     <th>已产生利息</th>
+                                    <th>上月未还</th>
+                                    <th>滞纳金</th>
+                                    <th>信用卡状态</th>
+                                    <th>违约月数</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>10000000001</td>
-                                    <td>2018/05/29</td>
-                                    <td>10000</td>
-                                    <td>8000</td>
-                                    <td>2000</td>
-                                    <td>正常</td>
-                                    <td>150</td>
+                                <tr th:each="c : ${cards}">
+                                    <td th:text="${c.id}"></td>
+                                    <td th:text="${#dates.format(c.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td th:text="${c.total}"></td>
+                                    <td th:text="${c.enable}"></td>
+                                    <td th:text="${c.borrow}"></td>
+                                    <td th:text="${c.least}"></td>
+                                    <td th:text="${c.v}"></td>
+                                    <td th:text="${c.last}"></td>
+                                    <td th:text="${c.late}"></td>
+                                    <td th:text="${c.state}"></td>
+                                    <td th:text="${c.month}"></td>
                                 </tr>
                                 </tbody>
 

@@ -1,14 +1,17 @@
 package com.jlu.chengjie.controller;
 
 import com.jlu.chengjie.model.*;
+import com.jlu.chengjie.repository.CardRepository;
 import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,11 +19,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-/**
+/*
  * 个人博客:http://www.chengjie-jlu.com
  * Github:https://github.com/Easoncheng0405
  * 作者 程杰
  * 创建时间 2018/5/28
+ */
+
+
+/**
+ * 网上银行controller
  */
 @Controller
 @RequestMapping("/bank")
@@ -30,15 +38,18 @@ public class NetBankController {
 
     private final RecordRepository recordRepository;
 
+    private final CardRepository cardRepository;
+
     @Autowired
-    public NetBankController(SavingRepository savingRepository, RecordRepository recordRepository) {
+    public NetBankController(SavingRepository savingRepository, RecordRepository recordRepository, CardRepository cardRepository) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
+        this.cardRepository = cardRepository;
     }
 
 
     @GetMapping
-    public String get(HttpSession session, @RequestParam(required = false) String range, Model model) throws ParseException {
+    public String get(@ModelAttribute String success, HttpSession session, @RequestParam(required = false) String range, Model model) throws ParseException {
 
         Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
 
@@ -152,5 +163,42 @@ public class NetBankController {
         return map;
     }
 
+
+    @PostMapping("/card")
+    public String newCard(@RequestParam long id, @RequestParam String password, final RedirectAttributes attributes
+            , HttpSession session) {
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
+
+        //未拿到当前账户，跳转到登陆页面
+        if (account == null)
+            return "redirect:/login";
+
+
+        if (cardRepository.findById(id) != null) {
+            attributes.addFlashAttribute("success", "这张卡已经开通了");
+            return "redirect:/bank";
+        }
+
+        BigDecimal zero = new BigDecimal(0);
+
+        Card card = new Card();
+        card.setId(id);
+        card.setAccount(account);
+        card.setMoney(Constant.CARD);
+        card.setPassword(password);
+        card.setType("正常");
+        card.setV(zero);
+        card.setBorrow(zero);
+        card.setClast(zero);
+        card.setTemp(zero);
+        card.setClate(zero);
+        card.setCindex(0);
+        card.setDate(new Date());
+        card.setTag(0);
+
+        cardRepository.save(card);
+        attributes.addFlashAttribute("success", "成功开通信用卡");
+        return "redirect:/bank";
+    }
 
 }

@@ -1,9 +1,6 @@
 package com.jlu.chengjie.controller;
 
-import com.jlu.chengjie.model.Card;
-import com.jlu.chengjie.model.CardRecord;
-import com.jlu.chengjie.model.Constant;
-import com.jlu.chengjie.model.FormCard;
+import com.jlu.chengjie.model.*;
 import com.jlu.chengjie.repository.CardRecordRepository;
 import com.jlu.chengjie.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping("card")
+@RequestMapping("/card")
 public class CardController {
 
     private final CardRepository cardRepository;
@@ -41,7 +40,10 @@ public class CardController {
     }
 
     @GetMapping
-    public String get(@ModelAttribute String message, Model model) {
+    public String get(@ModelAttribute String message, Model model, HttpSession session) {
+
+        if (session.getAttribute("CURRENT_ACCOUNT") == null)
+            return "redirect:/login";
 
         List<Long> ids = new ArrayList<>();
         List<FormCard> cards = new ArrayList<>();
@@ -162,6 +164,12 @@ public class CardController {
         BigDecimal res = card.getBorrow().multiply(new BigDecimal("0.1")).add(must);
 
 
+        CardRecord record = new CardRecord();
+        record.setType("还款");
+        record.setMoney(new BigDecimal(money));
+        record.setDate(new Date());
+
+
         //未达到最低还款
         if (res.compareTo(decimal) > 0) {
 
@@ -201,8 +209,59 @@ public class CardController {
             cardRepository.save(card);
         }
 
+        record.setMoneyLeft(card.getMoney());
+        record.setCard(card);
+
+        cardRecordRepository.save(record);
         attributes.addFlashAttribute(Constant.MESSAGE, "成功还款 :" + decimal + "元 剩余可用额度为 :" + card.getMoney());
 
         return "redirect:/card";
+    }
+
+
+    @GetMapping("/data")
+    @ResponseBody
+    public HashMap<String, Object> getData(HttpSession session) {
+
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
+
+
+        HashMap<String, Object> map = new HashMap<>();
+        List<Card> cards = cardRepository.findByAccountAndType(account, "正常");
+        ArrayList<String> label = new ArrayList<>(cards.size());
+        ArrayList<double[][]> res = new ArrayList<>(cards.size());
+
+
+        ArrayList<Double> donut = new ArrayList<>();
+        for (Card c : cards) {
+
+            label.add(c.getId() + "");
+
+            List<CardRecord> records = cardRecordRepository.findByCard(c);
+            double[][] data = new double[records.size() + 1][2];
+
+
+            double tmp = c.getMoney().doubleValue();
+            data[0][0] = 0;
+            data[0][1] = Constant.CARD.doubleValue();
+            for (int i = 1; i <= records.size(); i++) {
+
+                double v = records.get(i - 1).getMoneyLeft().doubleValue();
+
+                data[i][0] = i;
+                data[i][1] = v;
+
+
+            }
+            donut.add(tmp);
+            res.add(data);
+        }
+
+
+        map.put("label", label);
+        map.put("res", res);
+        map.put("donut", donut);
+
+        return map;
     }
 }

@@ -79,12 +79,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/bank" class="nav-link">
-                                <i class="nav-icon fa fa-globe"></i>
-                                <p>网上银行</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="/login" class="nav-link">
                                 <i class="nav-icon fa fa-cog"></i>
                                 <p>银行管理</p>
@@ -226,6 +220,54 @@
                                     <td th:text="${s.left}"></td>
                                     <td th:text="${s.flag}"></td>
                                     <td th:text="${s.enable}"></td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">信用卡交易记录</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="table3" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>交易流水号</th>
+                                    <th>所属信用卡</th>
+                                    <th>交易时间</th>
+                                    <th>金额</th>
+                                    <th>交易后可用额度</th>
+                                    <th>交易类型</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="cr : ${crs}">
+                                    <td th:text="${cr.id}"></td>
+                                    <td th:text="${cr.card.id}"></td>
+                                    <td th:text="${#dates.format(cr.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td th:text="${cr.money}"></td>
+                                    <td th:text="${cr.moneyLeft}"></td>
+                                    <td th:text="${cr.type}"></td>
                                 </tr>
                                 </tbody>
 
@@ -408,6 +450,14 @@
             "info": true,
             "autoWidth": false
         });
+        $('#table3').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
     });
 </script>
 <script>
@@ -436,17 +486,12 @@
 <script>
     $(function () {
 
-        /*
-         * LINE CHART
-         * ----------
-         */
-        //LINE randomly generated data
-
         $.ajax({
             type: "GET",
             url: "/bank/data",
             dataType: "json",
             success: function (data) {
+
                 var label = data['label'];
                 var res = [];
                 for (var i = 0; i < label.length; i++) {
@@ -455,6 +500,8 @@
                         label: label[i]
                     };
                 }
+
+                console.log(res);
                 $.plot('#line-chart', res, {
                     grid: {
                         hoverable: true,

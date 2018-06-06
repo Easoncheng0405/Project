@@ -1,6 +1,7 @@
 package com.jlu.chengjie.controller;
 
 import com.jlu.chengjie.model.*;
+import com.jlu.chengjie.repository.CardRecordRepository;
 import com.jlu.chengjie.repository.CardRepository;
 import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
@@ -40,11 +41,15 @@ public class NetBankController {
 
     private final CardRepository cardRepository;
 
+    private final CardRecordRepository cardRecordRepository;
+
     @Autowired
-    public NetBankController(SavingRepository savingRepository, RecordRepository recordRepository, CardRepository cardRepository) {
+    public NetBankController(SavingRepository savingRepository, RecordRepository recordRepository,
+                             CardRepository cardRepository, CardRecordRepository cardRecordRepository) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
         this.cardRepository = cardRepository;
+        this.cardRecordRepository = cardRecordRepository;
     }
 
 
@@ -79,6 +84,9 @@ public class NetBankController {
 
         List<FormSavings> savings = new ArrayList<>();
 
+        List<CardRecord> crs = cardRecordRepository.findAll();
+
+        model.addAttribute("crs", crs);
         for (Savings s : savingRepository.findByEnableAndAccount(true, account)) {
 
             FormSavings form = new FormSavings();

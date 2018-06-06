@@ -6,6 +6,7 @@ package com.jlu.chengjie.repository;
  *创建时间 2018/6/5
  */
 
+import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -17,5 +18,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     Card findById(long id);
 
-    List<Card> findByType(String type);
+    List<Card> findByAccountAndType(Account account, String type);
 }

@@ -105,13 +105,37 @@
                 <a href="/" class="nav-link">银行管理系统</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">开通网上银行</a>
+                <a href="#" data-toggle="modal" data-target="#myModal" class="nav-link">开通网上银行</a>
             </li>
         </ul>
     </nav>
     <!-- /.navbar -->
 
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">开通网上银行</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <form class="form-group" action="/register/netBank" method="post">
+                    <div class="modal-body">
 
+                        <label>网上银行用户名</label>
+                        <input placeholder="16位英文字母或数字" type="text" name="name" maxlength="16"
+                               max="2999999999" class="form-control" required="required">
+                        <label>设定密码</label>
+                        <input type="password" name="password" class="form-control" maxlength="16" required="required">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交更改</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
 
@@ -416,10 +440,16 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+
+<script src="/js/table.min.js"></script>
+<script src="/js/dataTables.bootstrap4.min.js"></script>
+<script src="/js/jquery.slimscroll.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="/js/daterangepicker.js"></script>
 <script src="/js/jquery.flot.min.js"></script>
 <script src="/js/jquery.flot.pie.min.js"></script>
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/dataTables.bootstrap4.min.js"></script>
+<script src="/js/demo.js"></script>
 <script>
     $(function () {
         $('#table').DataTable({
@@ -431,102 +461,89 @@
             "autoWidth": false
         });
 
-        /*
-         * LINE CHART
-         * ----------
-         */
-        //LINE randomly generated data
 
-        var sin = [];
-        for (var i = 0; i < 14; i += 0.5) {
-            sin.push([i, Math.sin(i)]);
-
-        }
-        var line_data1 = {
-            data: sin,
-            color: '#3c8dbc'
-        };
-        $.plot('#line-chart', [line_data1], {
-            grid: {
-                hoverable: true,
-                borderColor: '#f3f3f3',
-                borderWidth: 1,
-                tickColor: '#f3f3f3'
-            },
-            series: {
-                shadowSize: 0,
-                lines: {
-                    show: true
-                },
-                points: {
-                    show: true
+        $.ajax({
+            type: "GET",
+            url: "/card/data",
+            dataType: "json",
+            success: function (data) {
+                var label = data['label'];
+                var res = [];
+                for (var i = 0; i < label.length; i++) {
+                    res[i] = {
+                        data: data['res'][i],
+                        label: label[i]
+                    };
                 }
-            },
-            lines: {
-                fill: false,
-                color: ['#3c8dbc', '#f56954']
-            },
-            yaxis: {
-                show: true
-            },
-            xaxis: {
-                show: true
+                $.plot('#line-chart', res, {
+                    grid: {
+                        hoverable: true,
+                        borderColor: '#f3f3f3',
+                        borderWidth: 1,
+                        tickColor: '#f3f3f3'
+                    },
+                    series: {
+                        shadowSize: 0,
+                        lines: {
+                            show: true
+                        },
+                        points: {
+                            show: true
+                        }
+                    },
+                    lines: {
+                        fill: false,
+                        color: ['#3c8dbc', '#f56954']
+                    },
+                    yaxis: {
+                        show: true
+                    },
+                    xaxis: {
+                        show: true
+                    }
+                });
+
+                var donutData = [];
+                for (i = 0; i < label.length; i++) {
+                    donutData[i] = {
+                        data: data['donut'][i],
+                        label: label[i]
+                    };
+                }
+                $.plot('#donut-chart', donutData, {
+                    series: {
+                        pie: {
+                            show: true,
+                            radius: 1,
+                            innerRadius: 0.5,
+                            label: {
+                                show: true,
+                                radius: 2 / 3,
+                                formatter: labelFormatter,
+                                threshold: 0.1
+                            }
+
+                        }
+                    },
+                    legend: {
+                        show: false
+                    }
+                })
             }
         });
 
-
         /*
-         * DONUT CHART
-         * -----------
-         */
-
-        var donutData = [
-            {
-                label: '可用',
-                data: 30,
-                color: '#bc0000'
-            },
-            {
-                label: '欠款',
-                data: 70,
-                color: '#0000b7'
-            }
-        ];
-        $.plot('#donut-chart', donutData, {
-            series: {
-                pie: {
-                    show: true,
-                    radius: 1,
-                    innerRadius: 0.5,
-                    label: {
-                        show: true,
-                        radius: 2 / 3,
-                        formatter: labelFormatter,
-                        threshold: 0.1
-                    }
-
-                }
-            },
-            legend: {
-                show: false
-            }
-        })
-        /*
-         * END DONUT CHART
-         */
-
-    })
-
-    /*
      * Custom Label formatter
      * ----------------------
      */
-    function labelFormatter(label, series) {
-        return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
-            + label
-            + '<br>'
-            + Math.round(series.percent) + '%</div>'
-    }
+        function labelFormatter(label, series) {
+            return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
+                + label
+                + '<br>'
+                + Math.round(series.percent) + '%</div>'
+        }
+    });
+
 </script>
 
 <!-- AdminLTE for demo purposes -->

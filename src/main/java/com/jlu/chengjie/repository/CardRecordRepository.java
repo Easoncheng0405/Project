@@ -7,14 +7,17 @@ package com.jlu.chengjie.repository;
  */
 
 
+import com.jlu.chengjie.model.Card;
 import com.jlu.chengjie.model.CardRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 @Repository
 public interface CardRecordRepository extends JpaRepository<CardRecord, Long> {
 
-
+    List<CardRecord> findByCard(Card card);
 
 }

@@ -5,9 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
-import java.text.ParseException;
-
-
 /**
  * 个人博客:http://www.chengjie-jlu.com
  * Github:https://github.com/Easoncheng0405
@@ -20,11 +17,17 @@ import java.text.ParseException;
 public class App {
 
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
 
         SpringApplication.run(App.class,args);
 
+
+
+
+
     }
+
+
 
 
 

@@ -1,4 +1,4 @@
-package com.jlu.chengjie.model;
+package com.jlu.chengjie.model.form;
 /*
  *个人博客:http://www.chengjie-jlu.com
  *Github:https://github.com/Easoncheng0405

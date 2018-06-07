@@ -20,7 +20,9 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
     <style>
-        label {margin-top:5px;}
+        label {
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -138,6 +140,11 @@
             <div class="alert alert-success alert-dismissible">
                 <h5><i class="icon fa fa-check"></i> 欢迎!</h5>
                 您现在正以储蓄部门员工身份登陆
+            </div>
+
+            <div th:if="${message}" class="alert alert-danger alert-dismissible">
+                <h5><i class="icon fa fa-ban"></i> 错误!</h5>
+                <p th:text="${message}"></p>
             </div>
 
             <div class="row">
@@ -282,11 +289,14 @@
                         <div class="card-body">
                             <form class="form-group">
                                 <label for="a">活期利率</label>
-                                <input id="a" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <input id="a" class="form-control" type="number" placeholder="大于0小于0.01"
+                                       required="required">
                                 <label for="b">整存整取利率</label>
-                                <input id="b" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <input id="b" class="form-control" type="number" placeholder="大于0小于0.01"
+                                       required="required">
                                 <label for="c">定活两便利率</label>
-                                <input id="c" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <input id="c" class="form-control" type="number" placeholder="大于0小于0.01"
+                                       required="required">
 
                                 <button class="btn-success btn btn-block form-control" style="margin-top: 20px;">提交
                                 </button>
@@ -311,7 +321,8 @@
                         <div class="card-body">
                             <form class="form-group">
                                 <label for="d">信用卡利率</label>
-                                <input id="d" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
+                                <input id="d" class="form-control" type="number" placeholder="大于0小于0.01"
+                                       required="required">
                                 <button class="btn-success btn btn-block form-control" style="margin-top: 20px;">提交
                                 </button>
                             </form>
@@ -359,32 +370,36 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table class="table table-bordered table-striped">
+
+                            <div class="alert alert-info alert-dismissible">
+                                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                                <p>当前活期利率: <b th:text="${v1}"></b>定期利率: <b th:text="${v2}"></b>信用卡利率: <b th:text="${card}"></b></p>
+                            </div>
+
+                            <table id="table3" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>计划ID</th>
                                     <th>计划开始时间</th>
                                     <th>计划状态</th>
                                     <th>活期利率</th>
-                                    <th>整存整取利率</th>
-                                    <th>定活两便利率</th>
+                                    <th>定期利率</th>
                                     <th>信用卡利率</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>2018-5-9 18:30</td>
-                                    <td>正在执行</td>
-                                    <td>0.01</td>
-                                    <td>0.02</td>
-                                    <td>0.06</td>
-                                    <td>0.01</td>
+                                <tr th:each=" p : ${plans}">
+                                    <td th:text="${p.id}">1</td>
+                                    <td th:text="${#dates.format(p.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td th:text="${p.type}"></td>
+                                    <td th:text="${p.v1}"></td>
+                                    <td th:text="${p.v2}"></td>
+                                    <td th:text="${p.card}"></td>
                                     <td>
-                                        <button class="btn btn-success" onclick="x()">启用</button>
-                                        <button class="btn btn-warning" onclick="y()">取消</button>
-                                        <button class="btn btn-danger" onclick="z()">删除</button>
+                                        <button th:id="${p.id}" class="btn btn-success" onclick="x(this)">启用</button>
+                                        <button th:id="${p.id}" class="btn btn-warning" onclick="y(this)">取消</button>
+                                        <button th:id="${p.id}" class="btn btn-danger" onclick="z(this)">删除</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -412,7 +427,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <form class="form-group">
+                            <form class="form-group" action="/admin" method="post">
 
                                 <label>时间范围</label>
                                 <div class="input-group">
@@ -421,15 +436,17 @@
                                     <input type="text" name="range" class="form-control float-right"
                                            id="reservationtime">
                                 </div>
-                                <label for="a"1>活期利率</label>
-                                <input id="a1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
-                                <label for="b1">整存整取利率</label>
-                                <input id="b1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
-                                <label for="c1">定活两便利率</label>
-                                <input id="c1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
-                                <label for="d1">信用卡利率</label>
-                                <input id="d1" class="form-control" type="number" placeholder="大于0小于0.01" required="required">
-                                <button class="btn-success btn btn-block form-control" style="margin-top: 20px;">添加计划
+                                <label>活期利率</label>
+                                <input class="form-control" name="v1" type="number" min="0.001" max="1" step="0.001"
+                                       required="required">
+                                <label>定期利率</label>
+                                <input class="form-control" name="v2" type="number" min="0.001" max="1" step="0.001"
+                                       required="required">
+                                <label>信用卡利率</label>
+                                <input class="form-control" name="card" type="number" min="0.001" max="1" step="0.001"
+                                       required="required">
+                                <button class="btn-success btn btn-block form-control" type="submit"
+                                        style="margin-top: 20px;">添加计划
                                 </button>
                             </form>
                         </div>
@@ -442,19 +459,59 @@
     <!-- /.content-wrapper -->
     <script>
 
-        function x() {
-            if (confirm("确定启动计划吗？"))
-                alert("计划已启动！")
+        function x(obj) {
+            if (confirm("确定启动计划吗？")) {
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/start?id=" + obj.id,
+                    dataType: "text",
+                    success: function (data) {
+                        alert(data);
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('启动计划失败！')
+                    }
+                });
+
+
+            }
         }
 
-        function y() {
-            if (confirm("确定要取消计划吗？"))
-                alert("计划已取消！")
+
+        function y(obj) {
+            if (confirm("确定取消计划吗？")) (
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/cancel?id=" + obj.id,
+                    dataType: "text",
+                    success: function (data) {
+                        alert(data);
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('取消计划失败！')
+                    }
+                })
+            );
         }
 
-        function z() {
-            if (confirm("确定要删除计划吗？"))
-                alert("计划已删除！")
+        function z(obj) {
+            if (confirm("确定删除计划吗？")) (
+                $.ajax({
+                        type: "GET",
+                        url: "/admin/delete?id=" + obj.id,
+                        dataType: "text",
+                        success: function (data) {
+                            alert(data);
+                            location.reload();
+                        },
+                        error: function () {
+                            alert('删除计划失败！')
+                        }
+                    }
+                )
+            );
         }
     </script>
     <footer class="main-footer">
@@ -491,15 +548,24 @@
         $('#table1').DataTable({
             "paging": true,
             "lengthChange": true,
-            "searching": false,
+            "searching": true,
             "ordering": true,
             "info": true,
             "autoWidth": false
+
         });
         $('#table2').DataTable({
             "paging": true,
             "lengthChange": true,
-            "searching": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+        $('#table3').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
             "ordering": true,
             "info": true,
             "autoWidth": false
@@ -511,8 +577,22 @@
 
         $('#reservationtime').daterangepicker({
             timePicker: true,
-            timePickerIncrement: 30,
-            format: 'MM/DD/YYYY h:mm A'
+            timePickerIncrement: 1,
+            timePickerSeconds: false,
+            timePicker12Hour: false, //24小时 老版本
+            timePicker24Hour: true, //24小时 新版本
+            locale: {
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                customRangeLabel: '自定义',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                firstDay: 1
+            },
+            format: 'YYYY-MM-DD HH:mm'
         })
         //Date range picker with time picker
     })

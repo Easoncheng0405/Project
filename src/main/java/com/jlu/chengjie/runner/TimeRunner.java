@@ -2,6 +2,7 @@ package com.jlu.chengjie.runner;
 
 import com.jlu.chengjie.model.*;
 import com.jlu.chengjie.repository.CardRepository;
+import com.jlu.chengjie.repository.PlanRepository;
 import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
 import com.jlu.chengjie.util.IDUtil;
@@ -37,15 +38,17 @@ public class TimeRunner {
 
     private final RecordRepository recordRepository;
 
-
     private final CardRepository cardRepository;
+
+    private final PlanRepository planRepository;
 
     @Autowired
     public TimeRunner(SavingRepository savingRepository, RecordRepository recordRepository
-            , CardRepository cardRepository) {
+            , CardRepository cardRepository, PlanRepository planRepository) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
         this.cardRepository = cardRepository;
+        this.planRepository = planRepository;
     }
 
     /**
@@ -372,7 +375,7 @@ public class TimeRunner {
         for (Card c : cards) {
 
             //没欠钱已注销，跳过
-            if (c.getBorrow().compareTo(new BigDecimal(0)) < 1||c.getType().equals("已注销"))
+            if (c.getBorrow().compareTo(new BigDecimal(0)) < 1 || c.getType().equals("已注销"))
                 continue;
 
             //无论卡还款或没还款都要对当前的欠款进行计息
@@ -406,6 +409,27 @@ public class TimeRunner {
 
 
         }
+    }
+
+
+    /**
+     * 自动计划任务 每过10s检查一次
+     */
+    @Scheduled(fixedRate = 10000)
+    public void run8() {
+
+        Plan plan = planRepository.findByType("就绪");
+        if (plan == null || plan.getDate().after(new Date()))
+            return;
+
+        Constant.V_ONE = new BigDecimal(plan.getV1()).setScale(4, BigDecimal.ROUND_DOWN);
+        Constant.V_TWO = new BigDecimal(plan.getV2()).setScale(4, BigDecimal.ROUND_DOWN);
+        Constant.V_CARD = new BigDecimal(plan.getCard()).setScale(4, BigDecimal.ROUND_DOWN);
+
+        plan.setType("已完成");
+
+        System.out.print("已完成");
+        planRepository.save(plan);
     }
 
 }

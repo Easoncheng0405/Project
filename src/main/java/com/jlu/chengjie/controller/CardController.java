@@ -1,6 +1,7 @@
 package com.jlu.chengjie.controller;
 
 import com.jlu.chengjie.model.*;
+import com.jlu.chengjie.model.form.FormCard;
 import com.jlu.chengjie.repository.CardRecordRepository;
 import com.jlu.chengjie.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;

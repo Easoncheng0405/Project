@@ -6,6 +6,9 @@ package com.jlu.chengjie.model.form;
  *创建时间 2018/6/4
  */
 
+import com.jlu.chengjie.model.Constant;
+import com.jlu.chengjie.model.Savings;
+
 import java.util.Date;
 
 
@@ -112,5 +115,38 @@ public class FormSavings {
 
     public void setEnable(String enable) {
         this.enable = enable;
+    }
+
+    public static FormSavings getForm(Savings s){
+        FormSavings form = new FormSavings();
+        form.setId(s.getId());
+        form.setDate(s.getDate());
+        form.setmType(s.getMoneyType());
+        form.setMoney(s.getMoney().toString());
+        form.setV(s.getV().toString());
+        form.setType(s.getType());
+        if (s.getType().equals(Constant.SAVE_TWO))
+            if (s.getYear() == 1 || s.getYear() == 2)
+                form.setYear("一年");
+            else
+                form.setYear("五年");
+        else
+            form.setYear("不可用");
+
+        form.setLeft(s.getLeftMoney().toString());
+        if (s.getType().equals(Constant.SAVE_TWO))
+            if (s.isFlag())
+                form.setFlag("续存");
+            else
+                form.setFlag("不续存");
+        else
+            form.setFlag("不可用");
+        if (s.isEnable())
+            form.setEnable("可用");
+        else
+            form.setEnable("失效");
+
+        return form;
+
     }
 }

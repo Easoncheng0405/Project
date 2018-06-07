@@ -77,14 +77,14 @@
                                 <p>信用卡</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li th:unless="${flag}" class="nav-item">
                             <a href="#" data-toggle="modal" data-target="#myModal" class="nav-link">
                                 <i class="nav-icon fa fa-globe"></i>
                                 <p>网上银行</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/login" class="nav-link">
+                            <a href="/admin" class="nav-link">
                                 <i class="nav-icon fa fa-cog"></i>
                                 <p>银行管理</p>
                             </a>
@@ -102,21 +102,86 @@
                     <h4 class="modal-title" id="myModalLabel">登陆到网上银行</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
-                <form class="form-group" action="/login/netBank" method="post">
+                <div class="form-group">
                     <div class="modal-body">
 
                         <label>用户名</label>
-                        <input  type="text" name="name" maxlength="16"
+                        <input type="text" id="name1" maxlength="16"
                                class="form-control" required="required">
                         <label>密码</label>
-                        <input type="password" name="password" class="form-control" maxlength="16" required="required">
+                        <input type="password" id="password1" class="form-control" maxlength="16" required="required">
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" class="btn btn-primary">提交更改</button>
+                        <button onclick="login()" class="btn btn-primary">提交更改</button>
                     </div>
-                </form>
+                    <script>
+                        function login() {
+                            var name = $('#name1').val();
+                            var password = $('#password1').val();
+                            $.ajax({
+                                type: "GET",
+                                url: "/login/netBank?name=" + name + "&password=" + password,
+                                dataType: "text",
+                                success: function (data) {
+                                    if (data === "登陆成功!")
+                                        window.location.href = "http://localhost:8080/bank";
+                                    else
+                                        alert(data)
+                                },
+                                error: function () {
+                                    alert('当前无法登陆网上银行')
+                                }
+                            })
+                        }
+                    </script>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel2">开通网上银行</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="form-group">
+                    <div class="modal-body">
+
+                        <label>网上银行用户名</label>
+                        <input id="name" placeholder="英文字母不区分大小写" type="text" maxlength="16" class="form-control"
+                               required="required">
+                        <label>设定密码</label>
+                        <input type="password" id="password" class="form-control" maxlength="16" required="required">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button onclick="newAccount()" class="btn btn-primary">提交更改</button>
+                    </div>
+                    <script>
+                        function newAccount() {
+                            var name = $('#name').val();
+                            var password = $('#password').val();
+                            $.ajax({
+                                type: "GET",
+                                url: "/register/netBank?name=" + name + "&password=" + password,
+                                dataType: "text",
+                                success: function (data) {
+                                    alert(data);
+                                    if (data === "成功创建开通网上银行")
+                                        location.reload();
+                                },
+                                error: function () {
+                                    alert('无法创建用户！')
+                                }
+                            })
+                        }
+                    </script>
+                </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
@@ -132,6 +197,14 @@
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">银行管理系统</a>
             </li>
+
+            <li th:if="${flag}" class="nav-item d-none d-sm-inline-block">
+                <a href="#" data-toggle="modal" data-target="#myModal2" class="nav-link">开通网上银行</a>
+            </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/login" class="nav-link">注销当前用户</a>
+            </li>
         </ul>
     </nav>
     <!-- /.navbar -->
@@ -142,6 +215,12 @@
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
+
+            <div class="alert alert-primary alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fa fa-info"></i> 提示</h5>
+                <p th:text="${curr_user}"></p>
+            </div>
 
             <div th:if="${message}" class="alert alert-dark alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -212,7 +291,7 @@
                             </div>
                             <form class="form-group" action="/save" method="post">
 
-                                <label >选择币种</label>
+                                <label>选择币种</label>
                                 <select class="form-control" name="mType">
                                     <option>人民币</option>
                                     <option>美元</option>
@@ -227,7 +306,8 @@
                                 </select>
 
                                 <label>存入金额</label>
-                                <input class="form-control" name="money" type="number" required="required"  min="0.01" step="0.01" max="100000.00"
+                                <input class="form-control" name="money" type="number" required="required" min="0.01"
+                                       step="0.01" max="100000.00"
                                        placeholder="输入存款金额">
 
                                 <label>账户密码</label>
@@ -285,14 +365,15 @@
                                 </select>
 
                                 <label>取出金额</label>
-                                <input class="form-control" name="money" type="number" required="required" min="0.01" step="0.01" max="100000.00"
+                                <input class="form-control" name="money" type="number" required="required" min="0.01"
+                                       step="0.01" max="100000.00"
                                        placeholder="">
 
                                 <label>账户密码</label>
                                 <input class="form-control" name="password" type="password" required="required"
                                        placeholder="输入账户密码">
 
-                                <button class="btn btn-block btn-success" type="submit" style="margin-top: 20px;"> 提交
+                                <button class="btn btn-block btn-success" type="submit" style="margin-top: 98px;"> 提交
                                 </button>
                             </form>
                         </div>

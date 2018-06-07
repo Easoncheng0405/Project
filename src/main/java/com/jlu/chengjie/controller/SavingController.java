@@ -4,6 +4,7 @@ import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.Constant;
 import com.jlu.chengjie.model.Record;
 import com.jlu.chengjie.model.Savings;
+import com.jlu.chengjie.repository.BankAccountRes;
 import com.jlu.chengjie.repository.RecordRepository;
 import com.jlu.chengjie.repository.SavingRepository;
 import com.jlu.chengjie.util.IDUtil;
@@ -38,10 +39,14 @@ public class SavingController {
 
     private final RecordRepository recordRepository;
 
+
+    private final BankAccountRes bankAccountRes;
+
     @Autowired
-    public SavingController(SavingRepository savingRepository, RecordRepository recordRepository) {
+    public SavingController(SavingRepository savingRepository, RecordRepository recordRepository, BankAccountRes bankAccountRes) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
+        this.bankAccountRes = bankAccountRes;
     }
 
 
@@ -50,12 +55,14 @@ public class SavingController {
 
         Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
 
+
         if (account == null)
             return "redirect:/login";
 
-        if (message != null && !message.equals(""))
-            model.addAttribute(Constant.MESSAGE, message);
+        model.addAttribute("curr_user", "当前使用的一卡通账号: " + account.getId() + "所有人姓名: " + account.getName() + " 所有人身份证号: " + account.getPid());
 
+        if (bankAccountRes.findByAccount(account) == null)
+            model.addAttribute("flag", "true");
 
         List<String> options = new ArrayList<>();
         List<Savings> savings = savingRepository.findByEnableAndAccount(true, account);

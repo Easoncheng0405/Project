@@ -19,4 +19,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     Card findById(long id);
 
     List<Card> findByAccountAndType(Account account, String type);
+
+
+    List<Card> findByAccount(Account account);
 }

@@ -2,10 +2,7 @@ package com.jlu.chengjie.controller;
 
 import com.jlu.chengjie.model.*;
 import com.jlu.chengjie.model.form.FormSavings;
-import com.jlu.chengjie.repository.CardRecordRepository;
-import com.jlu.chengjie.repository.CardRepository;
-import com.jlu.chengjie.repository.RecordRepository;
-import com.jlu.chengjie.repository.SavingRepository;
+import com.jlu.chengjie.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,13 +41,17 @@ public class NetBankController {
 
     private final CardRecordRepository cardRecordRepository;
 
+    private final AccountRepository accountRepository;
+
     @Autowired
     public NetBankController(SavingRepository savingRepository, RecordRepository recordRepository,
-                             CardRepository cardRepository, CardRecordRepository cardRecordRepository) {
+                             CardRepository cardRepository, CardRecordRepository cardRecordRepository,
+                             AccountRepository accountRepository) {
         this.savingRepository = savingRepository;
         this.recordRepository = recordRepository;
         this.cardRepository = cardRepository;
         this.cardRecordRepository = cardRecordRepository;
+        this.accountRepository = accountRepository;
     }
 
 
@@ -62,6 +63,8 @@ public class NetBankController {
         //未拿到当前账户，跳转到登陆页面
         if (account == null)
             return "redirect:/login";
+
+        model.addAttribute("curr_user", "当前使用的一卡通账号: " + account.getId() + "所有人姓名: " + account.getName() + " 所有人身份证号: " + account.getPid());
 
         List<Record> records;
         if (range == null || range.equals(""))
@@ -88,38 +91,8 @@ public class NetBankController {
         List<CardRecord> crs = cardRecordRepository.findAll();
 
         model.addAttribute("crs", crs);
-        for (Savings s : savingRepository.findByEnableAndAccount(true, account)) {
-
-            FormSavings form = new FormSavings();
-            form.setId(s.getId());
-            form.setDate(s.getDate());
-            form.setmType(s.getMoneyType());
-            form.setMoney(s.getMoney().toString());
-            form.setV(s.getV().toString());
-            form.setType(s.getType());
-            if (s.getType().equals(Constant.SAVE_TWO))
-                if (s.getYear() == 1 || s.getYear() == 2)
-                    form.setYear("一年");
-                else
-                    form.setYear("五年");
-            else
-                form.setYear("不可用");
-
-            form.setLeft(s.getLeftMoney().toString());
-            if (s.getType().equals(Constant.SAVE_TWO))
-                if (s.isFlag())
-                    form.setFlag("续存");
-                else
-                    form.setFlag("不续存");
-            else
-                form.setFlag("不可用");
-            if (s.isEnable())
-                form.setEnable("可用");
-            else
-                form.setEnable("失效");
-
-            savings.add(form);
-        }
+        for (Savings s : savingRepository.findByEnableAndAccount(true, account))
+            savings.add(FormSavings.getForm(s));
 
         model.addAttribute("savings", savings);
         return "bank";
@@ -149,7 +122,7 @@ public class NetBankController {
             double[][] data = new double[records.size()][2];
 
 
-            double tmp = 0;
+            double tmp = s.getMoney().doubleValue();
 
             for (int i = 0; i < records.size(); i++) {
 
@@ -157,8 +130,6 @@ public class NetBankController {
 
                 data[i][0] = i;
                 data[i][1] = v;
-
-                tmp += v;
 
             }
 
@@ -208,6 +179,24 @@ public class NetBankController {
         cardRepository.save(card);
         attributes.addFlashAttribute("success", "成功开通信用卡");
         return "redirect:/bank";
+    }
+
+    @PostMapping("/lost")
+    public String lost(@RequestParam String type, @RequestParam String pid, final RedirectAttributes attributes,
+                       HttpSession session) {
+
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
+
+        if (!account.getPid().equals(pid)) {
+            attributes.addFlashAttribute(Constant.MESSAGE, "身份证号码不正确");
+            return "redirect:/bank";
+        }
+        account.setState(type);
+        session.removeAttribute("CURRENT_ACCOUNT");
+
+        accountRepository.save(account);
+
+        return "redirect:/login";
     }
 
 }

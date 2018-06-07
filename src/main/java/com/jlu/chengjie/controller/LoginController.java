@@ -8,11 +8,7 @@ import com.jlu.chengjie.repository.BankAccountRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -32,9 +28,9 @@ public class LoginController {
     private final BankAccountRes bankAccountRes;
 
     @Autowired
-    public LoginController(AccountRepository repository,BankAccountRes bankAccountRes) {
+    public LoginController(AccountRepository repository, BankAccountRes bankAccountRes) {
         this.accountRepository = repository;
-        this.bankAccountRes=bankAccountRes;
+        this.bankAccountRes = bankAccountRes;
     }
 
     @GetMapping
@@ -50,7 +46,12 @@ public class LoginController {
         Account account = accountRepository.findByPidAndPassword(pid, password);
 
         if (account == null) {
-            model.addAttribute("message", "身份证号或密码错误");
+
+            model.addAttribute(Constant.MESSAGE, "身份证号或密码错误");
+            return "login";
+        }
+        if (!account.getState().equals("正常")) {
+            model.addAttribute(Constant.MESSAGE, "已销户或挂失的账户无法登陆！");
             return "login";
         }
 
@@ -59,15 +60,42 @@ public class LoginController {
         return "redirect:/";
     }
 
-    @PostMapping("/netBank")
-    public String bank(@RequestParam String name, @RequestParam String password, final RedirectAttributes attributes){
+    @GetMapping("/netBank")
+    @ResponseBody
+    public String bank(@RequestParam String name, @RequestParam String password, HttpSession session) {
 
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
+        BankAccount bankAccount = bankAccountRes.findByAccount(account);
 
-        if(bankAccountRes.findByNameAndPassword(name,password)==null){
-            attributes.addFlashAttribute(Constant.MESSAGE,"用户名或密码错误");
-            return "redirect:/";
-        }
+        if (bankAccount.getName().equals(name) && bankAccount.getPassword().equals(password))
 
-        return "redirect:/bank";
+            return "登陆成功!";
+        return "用户名或密码错误";
     }
+
+
+    @GetMapping("/restart")
+    @ResponseBody
+    public String restart(@RequestParam String pid) {
+        Account account = accountRepository.findByPid(pid);
+
+        if (account == null)
+            return "没有这个账户";
+
+        if (account.getState().equals("正常"))
+            return "该账户状态正常，无需启用";
+
+        if (account.getState().equals("销户"))
+            return "已销户的账户无法启用";
+
+        account.setState("正常");
+
+        accountRepository.save(account);
+
+        return "成功启用该账户！";
+
+
+    }
+
+
 }

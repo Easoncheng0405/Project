@@ -8,11 +8,7 @@ import com.jlu.chengjie.repository.BankAccountRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -54,29 +50,36 @@ public class RegisterController {
             return "register";
         }
 
+        if (!account.getPassword().matches("^[0-9a-zA-Z]+$")) {
+            model.addAttribute("account", account);
+            model.addAttribute("message", "密码必须为6位数字");
+            return "register";
+        }
 
+        account.setState("正常");
         account.setId(accountRepository.findAll().size() + Constant.ID);
         session.setAttribute("CURRENT_ACCOUNT", accountRepository.save(account));
 
         return "redirect:/";
     }
 
-    @PostMapping("/netBank")
-    public String bank(@RequestParam String name, @RequestParam String password, final RedirectAttributes attributes, HttpSession session) {
+    @GetMapping("/netBank")
+    @ResponseBody
+    public String bank(@RequestParam String name, @RequestParam String password, HttpSession session) {
 
         Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
 
+        password = password.toLowerCase();
+
         if (account == null)
             return "redirect:/login";
-        if (!name.matches("^[0-9a-zA-Z]+$")) {
-            attributes.addFlashAttribute(Constant.MESSAGE, "用户名只能为字母或数字");
-            return "redirect:/card";
-        }
+        if (!name.matches("^[a-zA-Z]+$"))
+            return "用户名只能为字母";
 
-        if (bankAccountRes.findByName(name) != null) {
-            attributes.addFlashAttribute(Constant.MESSAGE, "这个用户名已经使用了");
-            return "redirect:/card";
-        }
+
+        if (bankAccountRes.findByName(name) != null)
+            return "这个用户名已经使用了";
+
 
         BankAccount bankAccount = new BankAccount();
         bankAccount.setAccount(account);
@@ -84,6 +87,8 @@ public class RegisterController {
         bankAccount.setPassword(password);
         bankAccountRes.save(bankAccount);
 
-        return "redirect:/bank";
+        return "成功创建开通网上银行";
     }
+
+
 }

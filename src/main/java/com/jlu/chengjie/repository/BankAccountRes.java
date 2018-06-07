@@ -7,6 +7,7 @@ package com.jlu.chengjie.repository;
  */
 
 
+import com.jlu.chengjie.model.Account;
 import com.jlu.chengjie.model.BankAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,5 +15,5 @@ public interface BankAccountRes extends JpaRepository<BankAccount,Long> {
 
     BankAccount findByName(String name);
 
-    BankAccount findByNameAndPassword(String name,String password);
+    BankAccount findByAccount(Account account);
 }

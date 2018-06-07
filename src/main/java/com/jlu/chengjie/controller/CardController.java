@@ -2,6 +2,7 @@ package com.jlu.chengjie.controller;
 
 import com.jlu.chengjie.model.*;
 import com.jlu.chengjie.model.form.FormCard;
+import com.jlu.chengjie.repository.BankAccountRes;
 import com.jlu.chengjie.repository.CardRecordRepository;
 import com.jlu.chengjie.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,12 @@ public class CardController {
 
     private final CardRecordRepository cardRecordRepository;
 
+    private final BankAccountRes bankAccountRes;
+
     @Autowired
-    public CardController(CardRepository cardRepository, CardRecordRepository cardRecordRepository) {
+    public CardController(CardRepository cardRepository, CardRecordRepository cardRecordRepository, BankAccountRes bankAccountRes) {
 
-
+        this.bankAccountRes = bankAccountRes;
         this.cardRepository = cardRepository;
         this.cardRecordRepository = cardRecordRepository;
     }
@@ -43,12 +46,20 @@ public class CardController {
     @GetMapping
     public String get(@ModelAttribute String message, Model model, HttpSession session) {
 
-        if (session.getAttribute("CURRENT_ACCOUNT") == null)
+        Account account = (Account) session.getAttribute("CURRENT_ACCOUNT");
+
+        if (account == null)
             return "redirect:/login";
+
+        model.addAttribute("curr_user", "当前使用的一卡通账号: " + account.getId() + "所有人姓名: " + account.getName() + " 所有人身份证号: " + account.getPid());
+
+        if (bankAccountRes.findByAccount(account) == null)
+            model.addAttribute("flag", "true");
+
 
         List<Long> ids = new ArrayList<>();
         List<FormCard> cards = new ArrayList<>();
-        for (Card card : cardRepository.findAll()) {
+        for (Card card : cardRepository.findByAccount(account)) {
             //只能选择可使用的卡
             if (card.getType().equals("正常"))
                 ids.add(card.getId());

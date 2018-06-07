@@ -90,7 +90,6 @@ public class TimeRunner {
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
 
-            System.out.println(1);
         }
     }
 
@@ -102,7 +101,7 @@ public class TimeRunner {
     public void run2() {
 
         //先找到所有储蓄子账户
-        List<Savings> savings = savingRepository.findByTypeAndEnable(Constant.SAVE_TWO, true);
+        List<Savings> savings = savingRepository.findByTypeAndEnable(Constant.SAVE_THREE, true);
 
         //利滚利
         for (Savings s : savings) {
@@ -133,7 +132,6 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
-            System.out.println(2);
         }
     }
 
@@ -198,7 +196,6 @@ public class TimeRunner {
                 record.setS(savingRepository.save(s));
                 recordRepository.save(record);
             }
-            System.out.println(3);
         }
     }
 
@@ -267,8 +264,6 @@ public class TimeRunner {
                 record.setS(savingRepository.save(s));
                 recordRepository.save(record);
             }
-
-            System.out.println(4);
         }
 
 
@@ -312,7 +307,6 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
-            System.out.println(5);
         }
     }
 
@@ -355,7 +349,6 @@ public class TimeRunner {
             //存到数据库
             record.setS(savingRepository.save(s));
             recordRepository.save(record);
-            System.out.println(6);
         }
     }
 
@@ -428,7 +421,6 @@ public class TimeRunner {
 
         plan.setType("已完成");
 
-        System.out.print("已完成");
         planRepository.save(plan);
     }
 

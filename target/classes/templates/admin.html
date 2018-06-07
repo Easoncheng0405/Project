@@ -109,17 +109,18 @@
                 <script>
                     function restart() {
                         var pid = prompt("输入身份证号码");
-                        $.ajax({
-                            type: "GET",
-                            url: "/login/restart?pid=" + pid,
-                            dataType: "text",
-                            success: function (data) {
-                                alert(data);
-                            },
-                            error: function () {
-                                alert('无法启用账户！')
-                            }
-                        })
+                        if (pid != null)
+                            $.ajax({
+                                type: "GET",
+                                url: "/login/restart?pid=" + pid,
+                                dataType: "text",
+                                success: function (data) {
+                                    alert(data);
+                                },
+                                error: function () {
+                                    alert('无法启用账户！')
+                                }
+                            })
                     }
                 </script>
             </li>
@@ -130,7 +131,7 @@
                 <script>
                     function del() {
                         var id = prompt("输入要删除的工号");
-                        if (confirm("确定要删除用户" + id + "吗?") && id != null)
+                        if (id != null && confirm("确定要删除用户" + id + "吗?"))
                             $.ajax({
                                 type: "GET",
                                 url: "/admin/del?id=" + id,

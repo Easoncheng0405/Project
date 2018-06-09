@@ -196,6 +196,7 @@ public class CardController {
             card.setV(zero);
             card.setClate(zero);
             card.setTemp(zero);
+            card.setClast(zero);
             //将本月最低未还部分计入
             card.setClast(res.subtract(decimal));
             cardRepository.save(card);

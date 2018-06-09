@@ -189,6 +189,15 @@ public class AdminController {
     @ResponseBody
     public String newUser(@RequestParam long id, @RequestParam String password) {
 
+
+        if (id < 10000 || id > 49999) {
+            return "账号必须在10000到49999之间";
+        }
+
+        if (password.length() < 8 || password.length() > 16) {
+            return "密码长度在8~12位之间";
+        }
+
         if (match(password))
             return "密码必须同时包含字母数字和特殊字符";
 

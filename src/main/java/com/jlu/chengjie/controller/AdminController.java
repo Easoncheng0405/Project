@@ -118,6 +118,7 @@ public class AdminController {
                        @RequestParam double card, final RedirectAttributes attributes) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date end = format.parse(range.substring(0, 16));
+
         if (end.before(new Date())) {
             attributes.addFlashAttribute(Constant.MESSAGE, "新计划的时间必须在当前时间之后");
             return "redirect:/admin";

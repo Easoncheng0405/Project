@@ -79,7 +79,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/login/user" class="nav-link">
+                            <a href="/admin" class="nav-link">
                                 <i class="nav-icon fa fa-cog"></i>
                                 <p>银行管理</p>
                             </a>
@@ -508,7 +508,7 @@
         $('#reservation').daterangepicker({
             timePicker: true,
             timePickerIncrement: 1,
-            timePickerSeconds: true,
+            timePickerSeconds: false,
             timePicker12Hour: false, //24小时 老版本
             timePicker24Hour: true, //24小时 新版本
             locale: {
@@ -522,7 +522,7 @@
                     '七月', '八月', '九月', '十月', '十一月', '十二月'],
                 firstDay: 1
             },
-            format: 'YYYY-MM-DD HH:mm:ss'
+            format: 'YYYY-MM-DD HH:mm'
         })
     })
 </script>
